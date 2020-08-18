@@ -2,7 +2,6 @@ body {
   background-color: black;
 }
 .note {
-  color: #5DADE2;
   font-family: Arial;
   height: calc(100vh - 16px);
   width: calc(100vw - 16px);
@@ -10,4 +9,28 @@ body {
 .note:focus,
 .note:active {
   outline: 0px solid transparent;
+}
+
+.color-1 {
+  color: #5DADE2;
+}
+
+.color-2 {
+  color: #58D68D;
+}
+
+.color-3 {
+  color: #F5B041;
+}
+
+.color-4 {
+  color: #EC7063;
+}
+
+.color-5 {
+  color: #A569BD;
+}
+
+.color-6 {
+  color: #F0F3F4;
 }

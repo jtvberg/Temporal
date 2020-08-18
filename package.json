@@ -15,5 +15,8 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^9.2.0"
+  },
+  "dependencies": {
+    "jquery": "^3.5.1"
   }
 }
