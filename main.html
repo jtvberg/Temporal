@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="main.css">
+    <title>Temporal</title>
+  </head>
+  <body>
+    <div contenteditable="true" class="note" onblur="noteBlur(event)"></div>
+    <script type="text/javascript" src="./renderer.js"></script>
+  </body>
+</html>

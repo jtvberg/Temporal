@@ -1,0 +1,19 @@
+{
+  "name": "Temporal",
+  "version": "0.1.0",
+  "description": "Transient Note Taking",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/jtvberg/Temporal",
+  "keywords": [
+    "Electron",
+    "notes"
+  ],
+  "author": "jtvberg",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^9.2.0"
+  }
+}
