@@ -1,11 +1,26 @@
 body {
-  background-color: black;
+  background-color: #252525;
 }
+
+.header-bar {
+  display: flex;
+  justify-content: center;
+  height: 20px;
+  -webkit-app-region: drag;
+}
+
+.note-button {
+  width: 18px;
+  height: 18px;
+  padding: 0px 2px;
+}
+
 .note {
   font-family: Arial;
   height: calc(100vh - 16px);
   width: calc(100vw - 16px);
 }
+
 .note:focus,
 .note:active {
   outline: 0px solid transparent;

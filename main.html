@@ -4,11 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="main.css">
     <title>Temporal</title>
   </head>
   <body>
-    <div contenteditable="true" class="note color-1" id="note-1"></div>
+    <div class="header-bar">
+      <div class="fas fa-square color-1 note-button"></div>
+      <div class="fas fa-square color-2 note-button"></div>
+      <div class="fas fa-square color-3 note-button"></div>
+      <div class="fas fa-square color-4 note-button"></div>
+      <div class="fas fa-square color-5 note-button"></div>
+      <div class="fas fa-square color-6 note-button"></div>
+    </div>
+    <div class="note-host">
+      <div contenteditable="true" class="note color-1" id="note-1"></div>
+      <div contenteditable="true" class="note color-2" id="note-2"></div>
+      <div contenteditable="true" class="note color-3" id="note-3"></div>
+      <div contenteditable="true" class="note color-4" id="note-4"></div>
+      <div contenteditable="true" class="note color-5" id="note-5"></div>
+      <div contenteditable="true" class="note color-6" id="note-6"></div>
+    </div>
     <script type="text/javascript" src="./renderer.js"></script>
   </body>
 </html>

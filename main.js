@@ -1,9 +1,13 @@
 const {app, BrowserWindow} = require('electron')
 
+// Enable Electron-Reload (dev only)
+require('electron-reload')(__dirname)
+
 function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true
     }

@@ -14,9 +14,17 @@
   "author": "jtvberg",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^9.2.0"
+    "electron": "^9.2.0",
+    "electron-reload": "^1.5.0",
+    "eslint": "^7.5.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
-    "jquery": "^3.5.1"
+    "jquery": "^3.5.1",
+    "@fortawesome/fontawesome-free": "^5.14.0"
   }
 }
