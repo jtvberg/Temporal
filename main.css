@@ -1,24 +1,31 @@
 body {
   background-color: #252525;
+  overflow: hidden;
 }
 
 .header-bar {
   display: flex;
   justify-content: center;
   height: 20px;
+  margin-top: -5px;
   -webkit-app-region: drag;
 }
 
 .note-button {
   width: 18px;
   height: 18px;
-  padding: 0px 2px;
+}
+
+.note-button-selected:before {
+  font-weight: 400;
+  content: '\f0c8';
 }
 
 .note {
   font-family: Arial;
-  height: calc(100vh - 16px);
+  height: calc(100vh - 36px);
   width: calc(100vw - 16px);
+  overflow: auto;
 }
 
 .note:focus,
