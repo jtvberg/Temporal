@@ -1,10 +1,11 @@
 const $ = require('jquery')
 let change = false
 
+$('#note-button-0').addClass('note-button-selected')
 $('#note-0').show()
 
 $('.note').each(function (e) {
-  $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] || ''
+  $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes')) ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
 })
 
 $('.note').blur( () => {

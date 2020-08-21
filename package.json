@@ -14,7 +14,7 @@
   "author": "jtvberg",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^9.2.0",
+    "electron": "^9.2.1",
     "electron-reload": "^1.5.0",
     "eslint": "^7.5.0",
     "eslint-config-standard": "^14.1.1",

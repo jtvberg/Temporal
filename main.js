@@ -5,20 +5,21 @@ require('electron-reload')(__dirname)
 
 function createWindow () {
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 400,
     minWidth: 240,
     minHeight: 100,
     titleBarStyle: 'hidden',
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      worldSafeExecuteJavaScript: true
     }
   })
 
   mainWindow.loadFile('main.html')
 
-  // Open DevTools
-  mainWindow.webContents.openDevTools()
+  // Open DevTools (dev only)
+  // mainWindow.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
