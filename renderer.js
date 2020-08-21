@@ -1,16 +1,19 @@
 const $ = require('jquery')
 let change = false
 
-$('#note-1')[0].innerHTML = localStorage.getItem('note')
+$('#note-0').show()
 
-var noteMo = new window.MutationObserver(function(e) {
-    change = true
+$('.note').each(function (e) {
+  $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] || ''
 })
-noteMo.observe($('#note-1')[0], { childList: true, subtree: true, characterData: true })
 
 $('.note').blur( () => {
   if (change) {
-    localStorage.setItem('note', $('#note-1')[0].innerHTML)
+    let notes = []
+    $('.note').each(function (e) {
+      notes.push($(this)[0].innerHTML)
+    })
+    localStorage.setItem('notes', JSON.stringify(notes))
     change = false
   }
 })
@@ -21,3 +24,12 @@ $('.note-button').click( (e) => {
   $(`#note-${$(e.currentTarget).data('val')}`).show()
   $(`#note-button-${$(e.currentTarget).data('val')}`).addClass('note-button-selected')
 })
+
+function changeWatch (note) {
+  var observer = new window.MutationObserver(function (e) {
+    change = true
+  })
+  observer.observe(note[0], { childList: true, subtree: true, characterData: true })
+}
+
+changeWatch($('.note-host'))

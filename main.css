@@ -25,6 +25,7 @@ body {
   font-family: Arial;
   height: calc(100vh - 36px);
   width: calc(100vw - 16px);
+  display: none;
   overflow: auto;
 }
 
@@ -33,26 +34,26 @@ body {
   outline: 0px solid transparent;
 }
 
+.color-0 {
+  color: #5dade2;
+}
+
 .color-1 {
-  color: #5DADE2;
+  color: #58d673;
 }
 
 .color-2 {
-  color: #58D68D;
+  color: #f7ce5c;
 }
 
 .color-3 {
-  color: #F5B041;
+  color: #e77534;
 }
 
 .color-4 {
-  color: #EC7063;
+  color: #b13f3b;
 }
 
 .color-5 {
-  color: #A569BD;
-}
-
-.color-6 {
-  color: #F0F3F4;
+  color: #8e4bad;
 }
