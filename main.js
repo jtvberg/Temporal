@@ -1,7 +1,7 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 
 // Enable Electron-Reload (dev only)
-require('electron-reload')(__dirname)
+// require('electron-reload')(__dirname)
 
 let win
 function createWindow () {
@@ -28,7 +28,7 @@ function createWindow () {
   win.setAlwaysOnTop(true, 'floating')
 
   // Open DevTools (dev only)
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
