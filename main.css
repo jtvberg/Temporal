@@ -36,8 +36,13 @@ body {
 
 .ontop-button {
   position: absolute;
-  top: 4px;
+  top: 3px;
   right: 4px;
+  color: #bebebe2d;
+}
+
+.ontop-button:hover {
+  color: #d6d6d6;
 }
 
 .ontop-locked:before {
@@ -70,8 +75,4 @@ body {
 
 .color-5 {
   color: #9155ad;
-}
-
-.color-6 {
-  color: #dddddd;
 }
