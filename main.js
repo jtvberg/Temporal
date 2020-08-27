@@ -1,7 +1,7 @@
 const {app, BrowserWindow, ipcMain, Tray } = require('electron')
 
 // Enable Electron-Reload (dev only)
-// require('electron-reload')(__dirname)
+require('electron-reload')(__dirname)
 
 let win = null
 const createWindow = () => {
@@ -13,6 +13,7 @@ const createWindow = () => {
     transparent: true,
     frame: false,
     show: false,
+    hasShadow: false,
     webPreferences: {
       nodeIntegration: true,
       worldSafeExecuteJavaScript: true
@@ -28,7 +29,7 @@ const createWindow = () => {
   win.setAlwaysOnTop(true, 'floating')
 
   // Open DevTools (dev only)
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
 }
 
 let tray = null
@@ -60,4 +61,12 @@ ipcMain.on('ontop-lock', function () {
 
 ipcMain.on('ontop-unlock', function () {
   win.setAlwaysOnTop(false)
+})
+
+ipcMain.on('win-max', () => {
+  win.maximize()
+})
+
+ipcMain.on('win-restore', () => {
+  win.unmaximize()
 })
