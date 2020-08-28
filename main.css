@@ -50,6 +50,7 @@ body {
   display: none;
   background-color: #00000000;
   overflow: auto;
+  z-index: 20;
 }
 
 .note:focus,
@@ -63,6 +64,7 @@ body {
   display: none;
   background-color: #00000000;
   overflow: auto;
+  z-index: 15;
 }
 
 .sketch-button {

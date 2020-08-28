@@ -5,6 +5,7 @@ let winMax = false
 
 $('#note-button-0').addClass('note-button-selected')
 $('#note-0').show()
+$('#sketch-0').show()
 
 $('.note').each(function () {
   $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes')) ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
@@ -51,12 +52,12 @@ $('.sketch-button').click(function () {
   if ($(this).hasClass('sketch-mode')) {
     $(this).removeClass('sketch-mode')
     $('.note').each(function () {
-      $(this).insertBefore(`#sketch-${$(this).data('val')}`)
+      $(this).css('z-index', '20')
     })
   } else {
     $(this).addClass('sketch-mode')
-    $('.sketch').each(function () {
-      $(this).insertBefore(`#note-${$(this).data('val')}`)
+    $('.note').each(function () {
+      $(this).css('z-index', '5')
     })
   }
 })
@@ -74,9 +75,10 @@ function maxRestoreWindow () {
     winMax = false
   }
 }
-let imageData = null
+
 let canvas = $('#sketch-0')[0]
 let ctx = canvas.getContext('2d')
+let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
 function canvasSize () {
   canvas.width = $('.note-host').width()
