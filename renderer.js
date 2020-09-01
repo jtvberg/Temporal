@@ -11,9 +11,9 @@ $('.note').each(function () {
   $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes')) ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
 })
 
-$('.note').blur( () => {
+$('.note').blur(() => {
   if (change) {
-    let notes = []
+    const notes = []
     $('.note').each(function () {
       notes.push($(this)[0].innerHTML)
     })
@@ -22,7 +22,7 @@ $('.note').blur( () => {
   }
 })
 
-$('.note-button').click( (e) => {
+$('.note-button').click((e) => {
   $('.note-button').removeClass('note-button-selected')
   $('.note, .sketch').hide(0)
   $(`#note-${$(e.currentTarget).data('val')}, #sketch-${$(e.currentTarget).data('val')}`).show()
@@ -62,7 +62,7 @@ $('.sketch-button').click(function () {
   }
 })
 
-$('.header-bar').dblclick( () => {
+$('.header-bar').dblclick(() => {
   maxRestoreWindow()
 })
 
@@ -76,51 +76,57 @@ function maxRestoreWindow () {
   }
 }
 
-let canvas = $('#sketch-0')[0]
-let ctx = canvas.getContext('2d')
-let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+function sketchCanvas (canvasElement, strokeColor) {
+  const canvas = canvasElement
+  const ctx = canvas.getContext('2d')
+  let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  const stroke = strokeColor
+  const mouse = { x: 0, y: 0 }
 
-function canvasSize () {
-  canvas.width = $('.note-host').width()
-  canvas.height = $('.note-host').height()
-}
+  function canvasSize () {
+    canvas.width = $('.note-host').width()
+    canvas.height = $('.note-host').height()
+  }
 
-function ctxSetup () {
-  ctx.lineWidth = 3;
-  ctx.lineJoin = 'round';
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = '#5dade2';
-}
+  function ctxSetup () {
+    ctx.lineWidth = 3
+    ctx.lineJoin = 'round'
+    ctx.lineCap = 'round'
+    ctx.strokeStyle = stroke
+  }
 
-canvasSize()
-ctxSetup()
+  function onPaint () {
+    ctx.lineTo(mouse.x, mouse.y)
+    ctx.stroke()
+  }
 
-$( window ).resize( () => {
   canvasSize()
-  ctx.putImageData(imageData, 0, 0)
   ctxSetup()
-})
 
-var mouse = {x: 0, y: 0}
- 
-canvas.addEventListener('mousemove', function(e) {
-  mouse.x = e.pageX - this.offsetLeft
-  mouse.y = e.pageY - this.offsetTop
-}, false)
+  $(window).resize(() => {
+    canvasSize()
+    ctx.putImageData(imageData, 0, 0)
+    ctxSetup()
+  })
 
-canvas.addEventListener('mousedown', function() {
-  ctx.beginPath()
-  ctx.moveTo(mouse.x, mouse.y)
+  canvas.addEventListener('mousemove', function (e) {
+    mouse.x = e.pageX - this.offsetLeft
+    mouse.y = e.pageY - this.offsetTop
+  }, false)
 
-  canvas.addEventListener('mousemove', onPaint, false)
-}, false)
- 
-canvas.addEventListener('mouseup', function() {
-  imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  canvas.removeEventListener('mousemove', onPaint, false)
-}, false)
- 
-var onPaint = function() {
-  ctx.lineTo(mouse.x, mouse.y)
-  ctx.stroke()
+  canvas.addEventListener('mousedown', () => {
+    ctx.beginPath()
+    ctx.moveTo(mouse.x, mouse.y)
+
+    canvas.addEventListener('mousemove', onPaint, false)
+  }, false)
+
+  canvas.addEventListener('mouseup', () => {
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    canvas.removeEventListener('mousemove', onPaint, false)
+  }, false)
 }
+
+$('.sketch').each(function () {
+  sketchCanvas($(this)[0], $(this).css('color'))
+})

@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, Tray } = require('electron')
+const { app, BrowserWindow, ipcMain, Tray } = require('electron')
 
 // Enable Electron-Reload (dev only)
 require('electron-reload')(__dirname)
