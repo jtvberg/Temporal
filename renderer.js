@@ -77,7 +77,7 @@ function maxRestoreWindow () {
 }
 
 function sketchCanvas (canvasElement, strokeColor) {
-  const canvas = canvasElement
+  const canvas = canvasElement[0]
   const ctx = canvas.getContext('2d')
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const stroke = strokeColor
@@ -109,6 +109,11 @@ function sketchCanvas (canvasElement, strokeColor) {
     ctxSetup()
   })
 
+  $(canvasElement).contextmenu(() => {
+    console.log('right')
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+  })
+
   canvas.addEventListener('mousemove', function (e) {
     mouse.x = e.pageX - this.offsetLeft
     mouse.y = e.pageY - this.offsetTop
@@ -128,5 +133,5 @@ function sketchCanvas (canvasElement, strokeColor) {
 }
 
 $('.sketch').each(function () {
-  sketchCanvas($(this)[0], $(this).css('color'))
+  sketchCanvas($(this), $(this).css('color'))
 })
