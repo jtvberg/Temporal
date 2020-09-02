@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron')
+const { ipcRenderer, clipboard } = require('electron')
 const $ = require('jquery')
 let change = false
 let winMax = false
@@ -69,10 +69,12 @@ $('.header-bar').dblclick(() => {
 function maxRestoreWindow () {
   if (!winMax) {
     ipcRenderer.send('win-max')
+    $('body').css('background-color', '#00000000')
     winMax = true
   } else {
     ipcRenderer.send('win-restore')
     winMax = false
+    $('body').css('background-color', '#161616b4')
   }
 }
 
@@ -134,4 +136,12 @@ function sketchCanvas (canvasElement, strokeColor) {
 
 $('.sketch').each(function () {
   sketchCanvas($(this), $(this).css('color'))
+})
+
+$('.note').on('paste', function (e) {
+  e.preventDefault()
+  const caretPos = $(this)[0].selectionStart
+  const textAreaTxt = $(this).text()
+  const txtToAdd = clipboard.readText()
+  $(this).text(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
 })
