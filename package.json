@@ -4,7 +4,9 @@
   "description": "Transient Note Taking",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "debug": "electron --inspect=7070 .",
+    "break": "electron --inspect-brk=7070 ."
   },
   "repository": "https://github.com/jtvberg/Temporal",
   "keywords": [
