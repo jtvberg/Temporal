@@ -7,7 +7,7 @@
  Toggle into sketch mode to free draw.
  Double-click the header to maximize and go into full screen/transparent mode to annotate docs. (Primary use-case is for telecommunication where you may want to mark-up a shared document for discussion.)
 
-#### Edit Mode Task Modal:
+#### Main Screen with Notes and Sketches:
 <img src="/screenshots/temporal_main.png" width="250"/>
 
 ## Using the code
