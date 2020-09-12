@@ -2,7 +2,7 @@
 const { app, BrowserWindow, ipcMain, Tray } = require('electron')
 
 // Enable Electron-Reload (dev only)
-require('electron-reload')(__dirname)
+// require('electron-reload')(__dirname)
 
 // Main window
 let win = null
@@ -34,7 +34,7 @@ const createWindow = () => {
   win.setAlwaysOnTop(true, 'floating')
 
   // Open DevTools (dev only)
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 }
 
 // Tray icon

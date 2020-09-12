@@ -1,5 +1,5 @@
 // Imports and variable declarations
-const { ipcRenderer, clipboard } = require('electron')
+const { ipcRenderer } = require('electron')
 const $ = require('jquery')
 let change = false
 let winMax = false
@@ -283,12 +283,3 @@ $('.note').click(function (e) {
 $('.note-entry-host').each(function () {
   dragElement($(`#${this.id}`)[0])
 })
-
-// Capture paste to note and push text only
-// $('.note-entry').on('paste', function (e) {
-//   e.preventDefault()
-//   const caretPos = $(this)[0].selectionStart
-//   const textAreaTxt = $(this).text()
-//   const txtToAdd = clipboard.readText()
-//   $(this).text(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
-// })
