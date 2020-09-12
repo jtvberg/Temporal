@@ -1,5 +1,6 @@
 // Imports and variable declarations
 const { app, BrowserWindow, ipcMain, Tray } = require('electron')
+const path = require('path')
 const updater = require('./updater')
 
 // Enable Electron-Reload (dev only)
@@ -45,7 +46,7 @@ const createWindow = () => {
 // Tray icon
 let tray = null
 const createTray = () => {
-  tray = new Tray('icon.png')
+  tray = new Tray(path.join(__dirname, 'icon.png'))
   tray.setToolTip('Temporal')
   tray.on('click', () => {
     win.isVisible() ? win.hide() : win.show()
