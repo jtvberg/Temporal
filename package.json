@@ -30,8 +30,9 @@
     "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
-    "jquery": "^3.5.1",
-    "@fortawesome/fontawesome-free": "^5.14.0"
+    "@fortawesome/fontawesome-free": "^5.14.0",
+    "electron-updater": "^4.3.4",
+    "jquery": "^3.5.1"
   },
   "build": {
     "appId": "com.jtvberg.temporal",
@@ -40,7 +41,7 @@
       "category": "public.app-category.productivity"
     },
     "publish": {
-     "provider": "github"
+      "provider": "github"
     }
   }
 }

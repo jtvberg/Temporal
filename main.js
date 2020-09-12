@@ -1,5 +1,6 @@
 // Imports and variable declarations
 const { app, BrowserWindow, ipcMain, Tray } = require('electron')
+const updater = require('./updater')
 
 // Enable Electron-Reload (dev only)
 // require('electron-reload')(__dirname)
@@ -7,6 +8,10 @@ const { app, BrowserWindow, ipcMain, Tray } = require('electron')
 // Main window
 let win = null
 const createWindow = () => {
+  // Check for updates after 3 seconds
+  setTimeout(updater, 3000)
+
+  // Create main window
   win = new BrowserWindow({
     width: 300,
     height: 400,
