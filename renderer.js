@@ -17,7 +17,7 @@ function setFirstNote () {
 
 // Mutation observer to track note changes
 function changeWatch (note) {
-  var observer = new window.MutationObserver(function (e) {
+  var observer = new window.MutationObserver(function () {
     change = true
   })
   observer.observe(note[0], {
@@ -159,27 +159,51 @@ function dragElement (elmnt) {
   }
 }
 
+// Remove empty note-entries
+function removeEmptyNoteEntries () {
+  $('.note-entry-host').each(function () {
+    if (!$(this).find('.note-entry').text().trim().length > 0 && !$(this).hasClass('remove')) {
+      $(this).addClass('remove').remove()
+    }
+  })
+}
+
+// Save all notes
+function saveNotes () {
+  const notes = []
+  $('.note').each(function () {
+    notes.push($(this)[0].innerHTML)
+  })
+  localStorage.setItem('notes', JSON.stringify(notes))
+  change = false
+}
+
 // Save note content to local storage
 $(document).on('blur', '.note-entry-host', () => {
   if (change) {
-    // Remove empty note-entries
-    $('.note-entry-host').each(function () {
-      if ($(this).width() < 1 && !$(this).hasClass('remove')) {
-        $(this).addClass('remove').remove()
-      }
-    })
-    // Iterate through notes and store
-    const notes = []
-    $('.note').each(function () {
-      notes.push($(this)[0].innerHTML)
-    })
-    localStorage.setItem('notes', JSON.stringify(notes))
-    change = false
+    // Remove empty note-entries and save all notes
+    removeEmptyNoteEntries()
+    saveNotes()
   }
 })
 
-$(document).on('click', '.note-entry', function (e) {
+// Focus on note entry host on click
+$(document).on('click', '.note-entry-host', function () {
   $(this).focus()
+})
+
+// Focus on note entry on click
+$(document).on('click', '.note-entry', function (e) {
+  e.stopPropagation()
+  $(this).focus()
+})
+
+// Delete note-entry handler
+$(document).on('keydown', '.note-entry-host', function (e) {
+  if ($(e.target).hasClass('note-entry-host') && (e.keyCode === 46 || e.keyCode === 8)) {
+    $(e.target).remove()
+    saveNotes()
+  }
 })
 
 // Get note content from local storage
@@ -254,7 +278,7 @@ $('.note').click(function (e) {
     return
   }
   const id = 'ne' + Date.now()
-  const noteEntryHost = $(`<div id=${id}></div>`)
+  const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
   noteEntryHost.addClass('note-entry-host')
     .css('left', e.pageX - this.offsetLeft)
     .css('top', e.pageY - this.offsetTop)

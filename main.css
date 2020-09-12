@@ -45,7 +45,7 @@ body {
 
 .note {
   font-family: Arial;
-  font-size: 16pt;
+  font-size: 14pt;
   z-index: 20;
 }
 
@@ -79,8 +79,9 @@ body {
   padding: 8px;
   border-width: 1px;
   border-style: dotted;
-  border-color: transparent;
+  border-color: #00000000;
   border-radius: 5px;
+  outline: 1px solid #00000000;
 }
 
 .sketch {
