@@ -49,9 +49,11 @@ body {
   z-index: 20;
 }
 
-.note:focus,
-.note:active {
-  outline: 0px solid transparent;
+.note-entry:focus,
+.note-entry:active
+{
+  outline: 1px dotted #ffffff31;
+  outline-offset: 3px;
 }
 
 .note,
@@ -61,6 +63,10 @@ body {
   display: none;
   background-color: #00000000;
   overflow: auto;
+}
+
+.note-entry {
+  position: absolute;
 }
 
 .sketch {

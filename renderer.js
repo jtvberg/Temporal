@@ -20,7 +20,12 @@ function changeWatch (note) {
   var observer = new window.MutationObserver(function (e) {
     change = true
   })
-  observer.observe(note[0], { childList: true, subtree: true, characterData: true })
+  observer.observe(note[0], {
+    childList: true,
+    subtree: true,
+    characterData: true,
+    attributes: true
+  })
 }
 
 // Window max/restore on header double click
@@ -74,32 +79,93 @@ function sketchCanvas (canvasElement, strokeColor) {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
   })
 
-  canvas.addEventListener('mousemove', function (e) {
-    mouse.x = e.pageX - this.offsetLeft
-    mouse.y = e.pageY - this.offsetTop
-  }, false)
+  canvas.addEventListener(
+    'mousemove',
+    function (e) {
+      mouse.x = e.pageX - this.offsetLeft
+      mouse.y = e.pageY - this.offsetTop
+    },
+    false
+  )
 
-  canvas.addEventListener('mousedown', () => {
-    ctx.beginPath()
-    ctx.moveTo(mouse.x, mouse.y)
+  canvas.addEventListener(
+    'mousedown',
+    () => {
+      ctx.beginPath()
+      ctx.moveTo(mouse.x, mouse.y)
 
-    canvas.addEventListener('mousemove', onPaint, false)
-  }, false)
+      canvas.addEventListener('mousemove', onPaint, false)
+    },
+    false
+  )
 
-  canvas.addEventListener('mouseup', () => {
-    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    canvas.removeEventListener('mousemove', onPaint, false)
-  }, false)
+  canvas.addEventListener(
+    'mouseup',
+    () => {
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      canvas.removeEventListener('mousemove', onPaint, false)
+    },
+    false
+  )
 }
 
-// Get note content from local storage
-$('.note').each(function () {
-  $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes')) ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
-})
+// Note entry drag functions
+function dragElement (elmnt) {
+  var pos1 = 0
+  var pos2 = 0
+  var pos3 = 0
+  var pos4 = 0
+  if (document.getElementById(elmnt.id)) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id).onmousedown = dragMouseDown
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown
+  }
+
+  function dragMouseDown (e) {
+    e = e || window.event
+    e.preventDefault()
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX
+    pos4 = e.clientY
+    document.onmouseup = closeDragElement
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag
+  }
+
+  function elementDrag (e) {
+    e = e || window.event
+    e.preventDefault()
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX
+    pos2 = pos4 - e.clientY
+    pos3 = e.clientX
+    pos4 = e.clientY
+    // set the element's new position:
+    elmnt.style.top = elmnt.offsetTop - pos2 > 0 ? elmnt.offsetTop - pos2 + 'px' : 0 + 'px'
+    elmnt.style.left = elmnt.offsetLeft - pos1 > 0 ? elmnt.offsetLeft - pos1 + 'px' : 0 + 'px'
+  }
+
+  function closeDragElement () {
+    // stop moving when mouse button is released:
+    document.onmouseup = null
+    document.onmousemove = null
+    change = true
+    $('.note-entry').blur()
+  }
+}
 
 // Save note content to local storage
-$('.note').blur(() => {
+$(document).on('blur', '.note-entry', () => {
   if (change) {
+    // Remove empty note-entries
+    $('.note-entry').each(function () {
+      if ($(this).width() < 1 && !$(this).hasClass('remove')) {
+        $(this).addClass('remove').remove()
+      }
+    })
+    // Iterate through notes and store
     const notes = []
     $('.note').each(function () {
       notes.push($(this)[0].innerHTML)
@@ -109,12 +175,25 @@ $('.note').blur(() => {
   }
 })
 
+// Get note content from local storage
+$('.note').each(function () {
+  $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes'))
+    ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')]
+    : ''
+})
+
 // Toggle to selected note/sketch pair
 $('.note-button').click((e) => {
   $('.note-button').removeClass('note-button-selected')
   $('.note, .sketch').hide(0)
-  $(`#note-${$(e.currentTarget).data('val')}, #sketch-${$(e.currentTarget).data('val')}`).show()
-  $(`#note-button-${$(e.currentTarget).data('val')}`).addClass('note-button-selected')
+  $(
+    `#note-${$(e.currentTarget).data('val')}, #sketch-${$(e.currentTarget).data(
+      'val'
+    )}`
+  ).show()
+  $(`#note-button-${$(e.currentTarget).data('val')}`).addClass(
+    'note-button-selected'
+  )
 })
 
 // Toggle keep on top
@@ -154,10 +233,29 @@ $('.sketch').each(function () {
 })
 
 // Capture paste to note and push text only
-$('.note').on('paste', function (e) {
-  e.preventDefault()
-  const caretPos = $(this)[0].selectionStart
-  const textAreaTxt = $(this).text()
-  const txtToAdd = clipboard.readText()
-  $(this).text(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
+// $('.note-entry').on('paste', function (e) {
+//   e.preventDefault()
+//   const caretPos = $(this)[0].selectionStart
+//   const textAreaTxt = $(this).text()
+//   const txtToAdd = clipboard.readText()
+//   $(this).text(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
+// })
+
+// Add note entry at point of click
+$('.note').click(function (e) {
+  if (!$(e.target).hasClass('note-entry')) {
+    const id = 'ne' + Date.now()
+    $(`<div contenteditable="true" id=${id}></div>`)
+      .css('left', e.pageX - this.offsetLeft)
+      .css('top', e.pageY - this.offsetTop)
+      .addClass('note-entry')
+      .appendTo(this)
+      .focus()
+    dragElement($(`#${id}`)[0])
+  }
+})
+
+// Add drag behavior to note-entries
+$('.note-entry').each(function () {
+  dragElement($(`#${this.id}`)[0])
 })
