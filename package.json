@@ -7,7 +7,8 @@
     "start": "electron .",
     "debug": "electron --inspect=7070 .",
     "break": "electron --inspect-brk=7070 .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "release": "electron-builder -m -p onTagOrDraft"
   },
   "repository": "https://github.com/jtvberg/Temporal",
   "homepage": "https://github.com/jtvberg/Temporal",
@@ -36,8 +37,10 @@
     "appId": "com.jtvberg.temporal",
     "copyright": "Copyright jtvberg",
     "mac": {
-      "category": "public.app-category.productivity",
-      "target": "dmg"
+      "category": "public.app-category.productivity"
+    },
+    "publish": {
+     "provider": "github"
     }
   }
 }
