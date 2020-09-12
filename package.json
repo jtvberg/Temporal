@@ -6,9 +6,11 @@
   "scripts": {
     "start": "electron .",
     "debug": "electron --inspect=7070 .",
-    "break": "electron --inspect-brk=7070 ."
+    "break": "electron --inspect-brk=7070 .",
+    "build": "electron-builder"
   },
   "repository": "https://github.com/jtvberg/Temporal",
+  "homepage": "https://github.com/jtvberg/Temporal",
   "keywords": [
     "Electron",
     "notes"
@@ -17,6 +19,7 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^9.3.0",
+    "electron-builder": "^22.8.0",
     "electron-reload": "^1.5.0",
     "eslint": "^7.9.0",
     "eslint-config-standard": "^14.1.1",
@@ -28,5 +31,13 @@
   "dependencies": {
     "jquery": "^3.5.1",
     "@fortawesome/fontawesome-free": "^5.14.0"
+  },
+  "build": {
+    "appId": "com.jtvberg.temporal",
+    "copyright": "Copyright jtvberg",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": "dmg"
+    }
   }
 }

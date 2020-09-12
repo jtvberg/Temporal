@@ -45,6 +45,9 @@ const createTray = () => {
   tray.on('click', () => {
     win.isVisible() ? win.hide() : win.show()
   })
+  tray.on('right-click', () => {
+    app.quit()
+  })
 }
 
 // Remove app from dock
