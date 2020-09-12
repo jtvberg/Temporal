@@ -124,17 +124,16 @@ function dragElement (elmnt) {
   }
 
   function dragMouseDown (e) {
-    if ($(e.target).hasClass('note-entry')) {
-      return
+    if ($(e.target).hasClass('note-entry-host')) {
+      e = e || window.event
+      e.preventDefault()
+      // get the mouse cursor position at startup:
+      pos3 = e.clientX
+      pos4 = e.clientY
+      document.onmouseup = closeDragElement
+      // call a function whenever the cursor moves:
+      document.onmousemove = elementDrag
     }
-    e = e || window.event
-    e.preventDefault()
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX
-    pos4 = e.clientY
-    document.onmouseup = closeDragElement
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag
   }
 
   function elementDrag (e) {
@@ -263,6 +262,28 @@ $('.sketch').each(function () {
   sketchCanvas($(this), $(this).css('color'))
 })
 
+// Add note entry at point of click
+$('.note').click(function (e) {
+  if ($(e.target).hasClass('note')) {
+    const id = 'ne' + Date.now()
+    const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
+    noteEntryHost.addClass('note-entry-host')
+      .css('left', e.pageX - this.offsetLeft)
+      .css('top', e.pageY - this.offsetTop)
+      .appendTo(this)
+    $('<div contenteditable="true"></div>')
+      .addClass('note-entry')
+      .appendTo(noteEntryHost)
+      .focus()
+    dragElement($(`#${id}`)[0])
+  }
+})
+
+// Add drag behavior to note-entries
+$('.note-entry-host').each(function () {
+  dragElement($(`#${this.id}`)[0])
+})
+
 // Capture paste to note and push text only
 // $('.note-entry').on('paste', function (e) {
 //   e.preventDefault()
@@ -271,26 +292,3 @@ $('.sketch').each(function () {
 //   const txtToAdd = clipboard.readText()
 //   $(this).text(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
 // })
-
-// Add note entry at point of click
-$('.note').click(function (e) {
-  if ($(e.target).hasClass('note-entry-host') || $(e.target).hasClass('note-entry')) {
-    return
-  }
-  const id = 'ne' + Date.now()
-  const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
-  noteEntryHost.addClass('note-entry-host')
-    .css('left', e.pageX - this.offsetLeft)
-    .css('top', e.pageY - this.offsetTop)
-    .appendTo(this)
-  $('<div contenteditable="true"></div>')
-    .addClass('note-entry')
-    .appendTo(noteEntryHost)
-    .focus()
-  dragElement($(`#${id}`)[0])
-})
-
-// Add drag behavior to note-entries
-$('.note-entry-host').each(function () {
-  dragElement($(`#${this.id}`)[0])
-})
