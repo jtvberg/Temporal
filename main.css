@@ -49,10 +49,19 @@ body {
   z-index: 20;
 }
 
+.note-entry-host:hover {
+  border-color: #ffffff91;
+  cursor: move;
+}
+
+.note-entry:hover {
+  cursor: text;
+}
+
 .note-entry:focus,
 .note-entry:active
 {
-  outline: 1px dotted #ffffff31;
+  outline: 1px solid #ffffff31;
   outline-offset: 3px;
 }
 
@@ -65,8 +74,13 @@ body {
   overflow: auto;
 }
 
-.note-entry {
+.note-entry-host {
   position: absolute;
+  padding: 8px;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: transparent;
+  border-radius: 5px;
 }
 
 .sketch {

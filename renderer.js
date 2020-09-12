@@ -124,6 +124,9 @@ function dragElement (elmnt) {
   }
 
   function dragMouseDown (e) {
+    if ($(e.target).hasClass('note-entry')) {
+      return
+    }
     e = e || window.event
     e.preventDefault()
     // get the mouse cursor position at startup:
@@ -157,10 +160,10 @@ function dragElement (elmnt) {
 }
 
 // Save note content to local storage
-$(document).on('blur', '.note-entry', () => {
+$(document).on('blur', '.note-entry-host', () => {
   if (change) {
     // Remove empty note-entries
-    $('.note-entry').each(function () {
+    $('.note-entry-host').each(function () {
       if ($(this).width() < 1 && !$(this).hasClass('remove')) {
         $(this).addClass('remove').remove()
       }
@@ -173,6 +176,10 @@ $(document).on('blur', '.note-entry', () => {
     localStorage.setItem('notes', JSON.stringify(notes))
     change = false
   }
+})
+
+$(document).on('click', '.note-entry', function (e) {
+  $(this).focus()
 })
 
 // Get note content from local storage
@@ -243,19 +250,23 @@ $('.sketch').each(function () {
 
 // Add note entry at point of click
 $('.note').click(function (e) {
-  if (!$(e.target).hasClass('note-entry')) {
-    const id = 'ne' + Date.now()
-    $(`<div contenteditable="true" id=${id}></div>`)
-      .css('left', e.pageX - this.offsetLeft)
-      .css('top', e.pageY - this.offsetTop)
-      .addClass('note-entry')
-      .appendTo(this)
-      .focus()
-    dragElement($(`#${id}`)[0])
+  if ($(e.target).hasClass('note-entry-host') || $(e.target).hasClass('note-entry')) {
+    return
   }
+  const id = 'ne' + Date.now()
+  const noteEntryHost = $(`<div id=${id}></div>`)
+  noteEntryHost.addClass('note-entry-host')
+    .css('left', e.pageX - this.offsetLeft)
+    .css('top', e.pageY - this.offsetTop)
+    .appendTo(this)
+  $('<div contenteditable="true"></div>')
+    .addClass('note-entry')
+    .appendTo(noteEntryHost)
+    .focus()
+  dragElement($(`#${id}`)[0])
 })
 
 // Add drag behavior to note-entries
-$('.note-entry').each(function () {
+$('.note-entry-host').each(function () {
   dragElement($(`#${this.id}`)[0])
 })
