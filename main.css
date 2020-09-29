@@ -23,14 +23,17 @@ body {
   grid-template-rows: 1fr;
   height: 20px;
   margin-top: -5px;
-  margin-left: -4px;
-  margin-right: -4px;
+  margin-left: -7px;
+  margin-right: -7px;
   padding-top: 2px;
   -webkit-app-region: drag;
 }
 
 .header-bar-max {
   background-color: #161616be;
+  margin: auto;
+  width: 200px;
+  border-radius: 3px;
 }
 
 .note-button-host {
@@ -114,25 +117,13 @@ body {
 .sketch-button {
   grid-column: 1;
   justify-self: flex-start;
-  margin-left: 1px;
+  margin-left: 3px;
 }
 
 .ontop-button {
   grid-column: 3;
   justify-self: flex-end;
-  margin-right: 2px;
-}
-
-.sketch-button-max {
-  margin-right: 15px;
-  margin-top: 1px;
-  justify-self: flex-end;
-}
-
-.ontop-button-max {
-  margin-left: 15px;
-  margin-top: 1px;
-  justify-self: flex-start;
+  margin-right: 4px;
 }
 
 .sketch-mode {

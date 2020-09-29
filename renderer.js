@@ -34,16 +34,12 @@ function maxRestoreWindow () {
     ipcRenderer.send('win-max')
     $('body').css('background-color', '#00000000')
     $('.header-bar').addClass('header-bar-max')
-    $('.sketch-button').addClass('sketch-button-max')
-    $('.ontop-button').addClass('ontop-button-max')
     winMax = true
   } else {
     ipcRenderer.send('win-restore')
     winMax = false
     $('body').css('background-color', '#161616be')
     $('.header-bar').removeClass('header-bar-max')
-    $('.sketch-button').removeClass('sketch-button-max')
-    $('.ontop-button').removeClass('ontop-button-max')
   }
 }
 
