@@ -30,7 +30,7 @@
     "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.14.0",
+    "@fortawesome/fontawesome-free": "^5.15.0",
     "electron-updater": "^4.3.5",
     "jquery": "^3.5.1"
   },
