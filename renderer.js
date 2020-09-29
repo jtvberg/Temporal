@@ -33,11 +33,13 @@ function maxRestoreWindow () {
   if (!winMax) {
     ipcRenderer.send('win-max')
     $('body').css('background-color', '#00000000')
+    $('.header-bar').addClass('header-bar-max')
     winMax = true
   } else {
     ipcRenderer.send('win-restore')
     winMax = false
     $('body').css('background-color', '#161616b4')
+    $('.header-bar').removeClass('header-bar-max')
   }
 }
 
@@ -69,44 +71,31 @@ function sketchCanvas (canvasElement, strokeColor) {
   canvasSize()
   ctxSetup()
 
-  $(window).resize(() => {
+  $(window).on('resize', () => {
     canvasSize()
     ctx.putImageData(imageData, 0, 0)
     ctxSetup()
   })
 
-  $(canvasElement).contextmenu(() => {
+  $(canvasElement).on('contextmenu', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
   })
 
-  canvas.addEventListener(
-    'mousemove',
-    function (e) {
-      mouse.x = e.pageX - this.offsetLeft
-      mouse.y = e.pageY - this.offsetTop
-    },
-    false
-  )
+  canvas.addEventListener('mousemove', function (e) {
+    mouse.x = e.pageX - this.offsetLeft
+    mouse.y = e.pageY - this.offsetTop
+  }, false)
 
-  canvas.addEventListener(
-    'mousedown',
-    () => {
-      ctx.beginPath()
-      ctx.moveTo(mouse.x, mouse.y)
+  canvas.addEventListener('mousedown', () => {
+    ctx.beginPath()
+    ctx.moveTo(mouse.x, mouse.y)
+    canvas.addEventListener('mousemove', onPaint, false)
+  }, false)
 
-      canvas.addEventListener('mousemove', onPaint, false)
-    },
-    false
-  )
-
-  canvas.addEventListener(
-    'mouseup',
-    () => {
-      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-      canvas.removeEventListener('mousemove', onPaint, false)
-    },
-    false
-  )
+  canvas.addEventListener('mouseup', () => {
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    canvas.removeEventListener('mousemove', onPaint, false)
+  }, false)
 }
 
 // Note entry drag functions
@@ -116,10 +105,8 @@ function dragElement (elmnt) {
   var pos3 = 0
   var pos4 = 0
   if (document.getElementById(elmnt.id)) {
-    // if present, the header is where you move the DIV from:
     document.getElementById(elmnt.id).onmousedown = dragMouseDown
   } else {
-    // otherwise, move the DIV from anywhere inside the DIV:
     elmnt.onmousedown = dragMouseDown
   }
 
@@ -127,11 +114,9 @@ function dragElement (elmnt) {
     if ($(e.target).hasClass('note-entry-host')) {
       e = e || window.event
       e.preventDefault()
-      // get the mouse cursor position at startup:
       pos3 = e.clientX
       pos4 = e.clientY
       document.onmouseup = closeDragElement
-      // call a function whenever the cursor moves:
       document.onmousemove = elementDrag
     }
   }
@@ -139,22 +124,19 @@ function dragElement (elmnt) {
   function elementDrag (e) {
     e = e || window.event
     e.preventDefault()
-    // calculate the new cursor position:
     pos1 = pos3 - e.clientX
     pos2 = pos4 - e.clientY
     pos3 = e.clientX
     pos4 = e.clientY
-    // set the element's new position:
     elmnt.style.top = elmnt.offsetTop - pos2 > 0 ? elmnt.offsetTop - pos2 + 'px' : 0 + 'px'
     elmnt.style.left = elmnt.offsetLeft - pos1 > 0 ? elmnt.offsetLeft - pos1 + 'px' : 0 + 'px'
   }
 
   function closeDragElement () {
-    // stop moving when mouse button is released:
     document.onmouseup = null
     document.onmousemove = null
     change = true
-    $('.note-entry').blur()
+    $('.note-entry').trigger('blur')
   }
 }
 
@@ -188,18 +170,19 @@ $(document).on('blur', '.note-entry-host', () => {
 
 // Focus on note entry host on click
 $(document).on('click', '.note-entry-host', function () {
-  $(this).focus()
+  $(this).trigger('focus')
 })
 
 // Focus on note entry on click
 $(document).on('click', '.note-entry', function (e) {
   e.stopPropagation()
-  $(this).focus()
+  $(this).trigger('focus')
 })
 
 // Delete note-entry handler
 $(document).on('keydown', '.note-entry-host', function (e) {
-  if ($(e.target).hasClass('note-entry-host') && (e.keyCode === 46 || e.keyCode === 8)) {
+  if ($(e.target).hasClass('note-entry-host') && (e.key === 'Delete' || e.key === 'Backspace')) {
+    console.log(e.key)
     $(e.target).remove()
     saveNotes()
   }
@@ -207,27 +190,19 @@ $(document).on('keydown', '.note-entry-host', function (e) {
 
 // Get note content from local storage
 $('.note').each(function () {
-  $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes'))
-    ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')]
-    : ''
+  $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes')) ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
 })
 
 // Toggle to selected note/sketch pair
-$('.note-button').click((e) => {
+$('.note-button').on('click', (e) => {
   $('.note-button').removeClass('note-button-selected')
   $('.note, .sketch').hide(0)
-  $(
-    `#note-${$(e.currentTarget).data('val')}, #sketch-${$(e.currentTarget).data(
-      'val'
-    )}`
-  ).show()
-  $(`#note-button-${$(e.currentTarget).data('val')}`).addClass(
-    'note-button-selected'
-  )
+  $(`#note-${$(e.currentTarget).data('val')}, #sketch-${$(e.currentTarget).data('val')}`).show()
+  $(`#note-button-${$(e.currentTarget).data('val')}`).addClass('note-button-selected')
 })
 
 // Toggle keep on top
-$('.ontop-button').click(function () {
+$('.ontop-button').on('click', function () {
   if ($(this).hasClass('ontop-locked')) {
     $(this).removeClass('ontop-locked').addClass('ontop-unlocked')
     ipcRenderer.send('ontop-unlock')
@@ -238,7 +213,7 @@ $('.ontop-button').click(function () {
 })
 
 // Toggle between note and sketch canvas
-$('.sketch-button').click(function () {
+$('.sketch-button').on('click', function () {
   if ($(this).hasClass('sketch-mode')) {
     $(this).removeClass('sketch-mode')
     $('.note').each(function () {
@@ -253,7 +228,7 @@ $('.sketch-button').click(function () {
 })
 
 // Header double-click handler
-$('.header-bar').dblclick(() => {
+$('.header-bar').on('dblclick', () => {
   maxRestoreWindow()
 })
 
@@ -263,18 +238,12 @@ $('.sketch').each(function () {
 })
 
 // Add note entry at point of click
-$('.note').click(function (e) {
+$('.note').on('click', function (e) {
   if ($(e.target).hasClass('note')) {
     const id = 'ne' + Date.now()
     const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
-    noteEntryHost.addClass('note-entry-host')
-      .css('left', e.pageX - this.offsetLeft)
-      .css('top', e.pageY - this.offsetTop)
-      .appendTo(this)
-    $('<div contenteditable="true"></div>')
-      .addClass('note-entry')
-      .appendTo(noteEntryHost)
-      .focus()
+    noteEntryHost.addClass('note-entry-host').css('left', e.pageX - this.offsetLeft).css('top', e.pageY - this.offsetTop).appendTo(this)
+    $('<div contenteditable="true"></div>').addClass('note-entry').appendTo(noteEntryHost).trigger('focus')
     dragElement($(`#${id}`)[0])
   }
 })
