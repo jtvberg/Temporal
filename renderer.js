@@ -191,11 +191,19 @@ $(document).on('keydown', '.note-entry-host', (e) => {
   }
 })
 
-// Short-citcuit minimize key shortcut and hide window instead
+// Handle keyboard short-cuts
 $(document).on('keydown', 'body', (e) => {
-  e.preventDefault()
-  if (e.metaKey && e.key.toLowerCase() === 'm') {
-    remote.getCurrentWindow().hide()
+  if (e.metaKey) {
+    e.preventDefault()
+    if (e.key.toLowerCase() === 'm') {
+      remote.getCurrentWindow().hide()
+    }
+    if (e.key.toLowerCase() === 's') {
+      $('.sketch-button').trigger('click')
+    }
+    if (e.key.toLowerCase() === 'l') {
+      $('.ontop-button').trigger('click')
+    }
   }
 })
 
