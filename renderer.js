@@ -1,5 +1,5 @@
 // Imports and variable declarations
-const { ipcRenderer } = require('electron')
+const { ipcRenderer, remote } = require('electron')
 const $ = require('jquery')
 let change = false
 let winMax = false
@@ -180,11 +180,22 @@ $(document).on('click', '.note-entry', function (e) {
 })
 
 // Delete note-entry handler
-$(document).on('keydown', '.note-entry-host', function (e) {
+$(document).on('keydown', '.note-entry-host', (e) => {
   if ($(e.target).hasClass('note-entry-host') && (e.key === 'Delete' || e.key === 'Backspace')) {
-    console.log(e.key)
     $(e.target).remove()
     saveNotes()
+  }
+  if (e.key.toLowerCase() === 'm') {
+    console.log('minmax')
+    window.isVisible() ? window.hide() : window.show()
+  }
+})
+
+// Short-citcuit minimize key shortcut and hide window instead
+$(document).on('keydown', 'body', (e) => {
+  e.preventDefault()
+  if (e.metaKey && e.key.toLowerCase() === 'm') {
+    remote.getCurrentWindow().hide()
   }
 })
 
