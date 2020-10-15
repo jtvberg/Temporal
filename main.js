@@ -92,3 +92,8 @@ ipcMain.on('win-max', () => {
 ipcMain.on('win-restore', () => {
   win.unmaximize()
 })
+
+// IPC channel for maximizing window
+ipcMain.on('win-hide', () => {
+  win.hide()
+})

@@ -1,5 +1,5 @@
 // Imports and variable declarations
-const { ipcRenderer, remote } = require('electron')
+const { ipcRenderer } = require('electron')
 const $ = require('jquery')
 let change = false
 let winMax = false
@@ -185,23 +185,21 @@ $(document).on('keydown', '.note-entry-host', (e) => {
     $(e.target).remove()
     saveNotes()
   }
-  if (e.key.toLowerCase() === 'm') {
-    console.log('minmax')
-    window.isVisible() ? window.hide() : window.show()
-  }
 })
 
 // Handle keyboard short-cuts
 $(document).on('keydown', 'body', (e) => {
   if (e.metaKey) {
-    e.preventDefault()
     if (e.key.toLowerCase() === 'm') {
-      remote.getCurrentWindow().hide()
+      e.preventDefault()
+      ipcRenderer.send('win-hide')
     }
     if (e.key.toLowerCase() === 's') {
+      e.preventDefault()
       $('.sketch-button').trigger('click')
     }
     if (e.key.toLowerCase() === 'l') {
+      e.preventDefault()
       $('.ontop-button').trigger('click')
     }
   }
