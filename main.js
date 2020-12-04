@@ -4,7 +4,7 @@ const path = require('path')
 const updater = require('./updater')
 
 // Enable Electron-Reload (dev only)
-// require('electron-reload')(__dirname)
+require('electron-reload')(__dirname)
 
 // Main window
 let win = null
@@ -93,7 +93,7 @@ ipcMain.on('win-restore', () => {
   win.unmaximize()
 })
 
-// IPC channel for maximizing window
+// IPC channel for hiding window
 ipcMain.on('win-hide', () => {
   win.hide()
 })

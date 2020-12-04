@@ -121,6 +121,8 @@ function dragElement (elmnt) {
     }
   }
 
+  const pre = 1
+
   function elementDrag (e) {
     e = e || window.event
     e.preventDefault()
@@ -128,8 +130,10 @@ function dragElement (elmnt) {
     pos2 = pos4 - e.clientY
     pos3 = e.clientX
     pos4 = e.clientY
-    elmnt.style.top = elmnt.offsetTop - pos2 > 0 ? elmnt.offsetTop - pos2 + 'px' : 0 + 'px'
-    elmnt.style.left = elmnt.offsetLeft - pos1 > 0 ? elmnt.offsetLeft - pos1 + 'px' : 0 + 'px'
+    elmnt.style.top = round(elmnt.offsetTop - pos2, pre) > 0 ? round(elmnt.offsetTop - pos2, pre) + 'px' : 0 + 'px'
+    elmnt.style.left = round(elmnt.offsetLeft - pos1, pre) > 0 ? round(elmnt.offsetLeft - pos1, pre) + 'px' : 0 + 'px'
+    // elmnt.style.top = elmnt.offsetTop - pos2 > 0 ? Math.round((elmnt.offsetTop - pos2) / 20) * 20 + 'px' : 0 + 'px'
+    // elmnt.style.left = elmnt.offsetLeft - pos1 > 0 ? Math.round((elmnt.offsetLeft - pos1) / 20) * 20 + 'px' : 0 + 'px'
   }
 
   function closeDragElement () {
@@ -137,6 +141,12 @@ function dragElement (elmnt) {
     document.onmousemove = null
     change = true
     $('.note-entry').trigger('blur')
+  }
+
+  function round (num, precision) {
+    num = parseFloat(num)
+    if (!precision) return num
+    return (Math.round(num / precision) * precision)
   }
 }
 
