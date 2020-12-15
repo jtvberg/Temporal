@@ -40,7 +40,7 @@ const createWindow = () => {
   win.setAlwaysOnTop(true, 'floating')
 
   // Open DevTools (dev only)
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
 }
 
 // Tray icon

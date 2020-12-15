@@ -111,14 +111,13 @@ function dragElement (elmnt) {
   }
 
   function dragMouseDown (e) {
-    if ($(e.target).hasClass('note-entry-host')) {
-      e = e || window.event
-      e.preventDefault()
-      pos3 = e.clientX
-      pos4 = e.clientY
-      document.onmouseup = closeDragElement
-      document.onmousemove = elementDrag
-    }
+    if (!$(e.target).hasClass('note-entry-host')) { return }
+    e = e || window.event
+    e.preventDefault()
+    pos3 = e.clientX
+    pos4 = e.clientY
+    document.onmouseup = closeDragElement
+    document.onmousemove = elementDrag
   }
 
   const pre = 1
@@ -179,8 +178,9 @@ $(document).on('blur', '.note-entry-host', () => {
 })
 
 // Focus on note entry host on click
-$(document).on('click', '.note-entry-host', function () {
+$(document).on('click, mousedown', '.note-entry-host', function () {
   $(this).trigger('focus')
+  removeEmptyNoteEntries()
 })
 
 // Focus on note entry on click
@@ -212,6 +212,20 @@ $(document).on('keydown', 'body', (e) => {
       e.preventDefault()
       $('.ontop-button').trigger('click')
     }
+  }
+})
+
+$(document).on('wheel', function (e) {
+  const delta = e.originalEvent.deltaY
+  let currentSize = $(e.target).css('font-size').replace('px', '')
+  console.log(currentSize)
+  if (delta < 0) {
+    currentSize++
+  } else if (currentSize > 8) {
+    currentSize--
+  }
+  if ($(e.target).hasClass('note-entry')) {
+    $(e.target).css({ 'font-size': `${currentSize}px` })
   }
 })
 
