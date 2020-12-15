@@ -1,5 +1,5 @@
 // Imports and variable declarations
-const { ipcRenderer } = require('electron')
+const { ipcRenderer, clipboard } = require('electron')
 const $ = require('jquery')
 let change = false
 let winMax = false
@@ -215,7 +215,8 @@ $(document).on('keydown', 'body', (e) => {
   }
 })
 
-$(document).on('wheel', function (e) {
+// Zoom text size on mouse wheel
+$(document).on('wheel', '.note-entry', function (e) {
   const delta = e.originalEvent.deltaY
   let currentSize = $(e.target).css('font-size').replace('px', '')
   console.log(currentSize)
@@ -224,9 +225,12 @@ $(document).on('wheel', function (e) {
   } else if (currentSize > 8) {
     currentSize--
   }
-  if ($(e.target).hasClass('note-entry')) {
-    $(e.target).css({ 'font-size': `${currentSize}px` })
-  }
+  $(e.target).css({ 'font-size': `${currentSize}px` })
+})
+
+// Override paste to plain-text
+$(document).on('paste', '.note-entry', function (e) {
+  clipboard.writeText(clipboard.readText())
 })
 
 // Get note content from local storage
