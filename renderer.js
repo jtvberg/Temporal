@@ -229,8 +229,18 @@ $(document).on('wheel', '.note-entry', function (e) {
 })
 
 // Override paste to plain-text
-$(document).on('paste', '.note-entry', function (e) {
+$(document).on('paste', '.note-entry', () => {
   clipboard.writeText(clipboard.readText())
+})
+
+// Reset font size on double-click
+$(document).on('dblclick', '.note-entry-host', function () {
+  $(this).find('.note-entry').css({ 'font-size': '18px' })
+})
+
+// Stop double-click of entry from propagating
+$(document).on('dblclick', '.note-entry', (e) => {
+  e.stopPropagation()
 })
 
 // Get note content from local storage
@@ -238,8 +248,13 @@ $('.note').each(function () {
   $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes')) ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
 })
 
-// Toggle to selected note/sketch pair
+// Toggle to selected note/sketch pair; clear notes on metaKey
 $('.note-button').on('click', (e) => {
+  if (e.metaKey) {
+    $(`#note-${$(e.currentTarget).data('val')}`).empty()
+    saveNotes()
+    return
+  }
   $('.note-button').removeClass('note-button-selected')
   $('.note, .sketch').hide(0)
   $(`#note-${$(e.currentTarget).data('val')}, #sketch-${$(e.currentTarget).data('val')}`).show()
