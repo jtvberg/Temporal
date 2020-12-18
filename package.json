@@ -19,15 +19,14 @@
   "author": "jtvberg",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^9.3.2",
+    "electron": "^11.1.0",
     "electron-builder": "^22.9.1",
     "electron-reload": "^1.5.0",
-    "eslint": "^7.11.0",
-    "eslint-config-standard": "^14.1.1",
+    "eslint": "^7.15.0",
+    "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-promise": "^4.2.1"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",

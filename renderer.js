@@ -179,8 +179,12 @@ $(document).on('blur', '.note-entry-host', () => {
 
 // Focus on note entry host on click
 $(document).on('click, mousedown', '.note-entry-host', function () {
-  $(this).trigger('focus')
-  removeEmptyNoteEntries()
+  try {
+    $(this).trigger('focus')
+    removeEmptyNoteEntries()
+  } catch (err) {
+    // Ignore, this is a known jquery issue
+  }
 })
 
 // Focus on note entry on click
@@ -219,7 +223,6 @@ $(document).on('keydown', 'body', (e) => {
 $(document).on('wheel', '.note-entry', function (e) {
   const delta = e.originalEvent.deltaY
   let currentSize = $(e.target).css('font-size').replace('px', '')
-  console.log(currentSize)
   if (delta < 0) {
     currentSize++
   } else if (currentSize > 8) {
@@ -235,6 +238,9 @@ $(document).on('paste', '.note-entry', () => {
 
 // Reset font size on double-click
 $(document).on('dblclick', '.note-entry-host', function () {
+  $(this).find('.note-entry').children().each(function () {
+    $(this).removeAttr('style')
+  })
   $(this).find('.note-entry').css({ 'font-size': '18px' })
 })
 
