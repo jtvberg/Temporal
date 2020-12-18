@@ -248,11 +248,17 @@ $('.note').each(function () {
   $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes')) ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
 })
 
+// Right-click on note button to clear it
+$('.note-button').on('contextmenu', (e) => {
+  $(`#note-${$(e.currentTarget).data('val')}`).empty()
+  saveNotes()
+})
+
 // Toggle to selected note/sketch pair; clear notes on metaKey
 $('.note-button').on('click', (e) => {
   if (e.metaKey) {
-    $(`#note-${$(e.currentTarget).data('val')}`).empty()
-    saveNotes()
+    // set color
+    // white?
     return
   }
   $('.note-button').removeClass('note-button-selected')
