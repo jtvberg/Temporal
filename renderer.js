@@ -168,6 +168,18 @@ function saveNotes () {
   change = false
 }
 
+// Save all sketches
+function saveSketches () {
+  const sketches = []
+  $('.sketch').each(function () {
+    const canvas = $(this)[0]
+    const ctx = canvas.getContext('2d')
+    ctx.save()
+    sketches.push(canvas.toDataURL())
+  })
+  localStorage.setItem('sketches', JSON.stringify(sketches))
+}
+
 // Save note content to local storage
 $(document).on('blur', '.note-entry-host', () => {
   if (change) {
@@ -251,7 +263,22 @@ $(document).on('dblclick', '.note-entry', (e) => {
 
 // Get note content from local storage
 $('.note').each(function () {
-  $(this)[0].innerHTML = JSON.parse(localStorage.getItem('notes')) ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
+  $(this)[0].innerHTML = localStorage.getItem('notes') ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
+})
+
+// Get sketch content from local storage
+$('.sketch').each(function () {
+  const ctx = $(this)[0].getContext('2d')
+  const image = new Image()
+  image.onload = function () {
+    ctx.drawImage(image, 0, 0)
+  }
+  image.src = localStorage.getItem('sketches') ? JSON.parse(localStorage.getItem('sketches'))[$(this).data('val')] : 'data:image/png:base64,'
+})
+
+// Save sketches to local storage on mouse up
+$('.sketch').on('mouseup', () => {
+  saveSketches()
 })
 
 // Right-click on note button to clear it
