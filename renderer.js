@@ -1,12 +1,55 @@
+// TODO: Loaded sketches disappear on resize
+// TODO: Copy/Paste objects
+// TODO: Rework icon for Big Sur
+
 // Imports and variable declarations
 const { ipcRenderer, clipboard } = require('electron')
 const $ = require('jquery')
 let change = false
-let winMax = false
+let settings = []
 
 // Load methods
 setFirstNote()
 changeWatch($('.note-host'))
+loadSettings()
+
+// Settings save invoke from main
+ipcRenderer.on('save-settings', (e, data) => {
+  settings = {
+    windowSizeLocation : data.windowSizeLocation,
+    onTop : $('.ontop-button').hasClass('ontop-locked')
+  }
+  localStorage.setItem('settings', JSON.stringify(settings))
+})
+
+// Redraw sketches on window resize
+ipcRenderer.on('redraw', () => {
+  // loadSketches()
+})
+
+// Load settings
+function loadSettings () {
+  settings = localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings')) : getDefaultSettings()
+
+  // Set window size and location
+  ipcRenderer.send('set-window', settings.windowSizeLocation)
+
+  // Set window on top
+  if (settings.onTop) {
+    ipcRenderer.send('ontop-lock')
+  } else {
+    $('.ontop-button').removeClass('ontop-locked').addClass('ontop-unlocked')
+  }
+}
+
+// Return default settings
+function getDefaultSettings () {
+  const defaultSettings = {
+    onTop: true,
+    windowSizeLocation: { x: 0, y: 0, height: 400, width: 300 }
+  }
+  return defaultSettings
+}
 
 // Select first note
 function setFirstNote () {
@@ -30,16 +73,13 @@ function changeWatch (note) {
 
 // Window max/restore on header double click
 function maxRestoreWindow () {
-  if (!winMax) {
-    ipcRenderer.send('win-max')
-    $('body').css('background-color', '#00000000')
-    $('.header-bar').addClass('header-bar-max')
-    winMax = true
-  } else {
-    ipcRenderer.send('win-restore')
-    winMax = false
+  ipcRenderer.send('win-max')
+  if ($('.header-bar').hasClass('header-bar-max')) {
     $('body').css('background-color', '#161616be')
     $('.header-bar').removeClass('header-bar-max')
+  } else {
+    $('body').css('background-color', '#00000000')
+    $('.header-bar').addClass('header-bar-max')
   }
 }
 
@@ -266,16 +306,6 @@ $('.note').each(function () {
   $(this)[0].innerHTML = localStorage.getItem('notes') ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
 })
 
-// Get sketch content from local storage
-$('.sketch').each(function () {
-  const ctx = $(this)[0].getContext('2d')
-  const image = new Image()
-  image.onload = function () {
-    ctx.drawImage(image, 0, 0)
-  }
-  image.src = localStorage.getItem('sketches') ? JSON.parse(localStorage.getItem('sketches'))[$(this).data('val')] : 'data:image/png:base64,'
-})
-
 // Save sketches to local storage on mouse up
 $('.sketch').on('mouseup', () => {
   saveSketches()
@@ -331,9 +361,21 @@ $('.header-bar').on('dblclick', () => {
   maxRestoreWindow()
 })
 
+// Header right-click handler
+$('.header-bar').on('contextmenu', () => {
+  ipcRenderer.send('win-hide')
+})
+
 // Iterate and instantiate sketch canvases
 $('.sketch').each(function () {
   sketchCanvas($(this), $(this).css('color'))
+  const ctx = $(this)[0].getContext('2d')
+  const image = new Image()
+  image.onload = function () {
+    ctx.drawImage(image, 0, 0)
+  }
+  image.src = localStorage.getItem('sketches') ? JSON.parse(localStorage.getItem('sketches'))[$(this).data('val')] : 'data:image/png:base64,'
+  $(this).trigger('mousedown').trigger('mousemove').trigger('mouseup')
 })
 
 // Add note entry at point of click

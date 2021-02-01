@@ -2,9 +2,10 @@
 const { app, BrowserWindow, ipcMain, Tray } = require('electron')
 const path = require('path')
 const updater = require('./updater')
+let allowQuit = false
 
 // Enable Electron-Reload (dev only)
-require('electron-reload')(__dirname)
+// require('electron-reload')(__dirname)
 
 // Main window
 let win = null
@@ -36,11 +37,13 @@ const createWindow = () => {
     win.show()
   })
 
-  // Set initial state of always on top
-  win.setAlwaysOnTop(true, 'floating')
+  // Redraw canvas on resize
+  win.on('resize', () => {
+    win.webContents.send('redraw')
+  })
 
   // Open DevTools (dev only)
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 }
 
 // Tray icon
@@ -68,9 +71,28 @@ app.whenReady().then(() => {
   })
 })
 
+// When closing set window size and location
+app.on('before-quit', (e) => {
+  if (!allowQuit) {
+    e.preventDefault()
+    wb = win.getBounds()
+    const data = {
+      windowSizeLocation: { x: wb.x, y: wb.y, height: wb.height, width: wb.width }
+    }
+    win.webContents.send('save-settings', data)
+    allowQuit = true
+    app.quit()
+  }
+})
+
 // CLose app if all windows are closed (not Mac)
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit()
+  app.quit()
+})
+
+// IPC channel to update window size and location from settings
+ipcMain.on('set-window', (e, data) => {
+  win.setBounds({ x: data.x, y: data.y, height: data.height, width: data.width })
 })
 
 // IPC channel for locking app on top
@@ -85,12 +107,7 @@ ipcMain.on('ontop-unlock', function () {
 
 // IPC channel for maximizing window
 ipcMain.on('win-max', () => {
-  win.maximize()
-})
-
-// IPC channel for restoring window
-ipcMain.on('win-restore', () => {
-  win.unmaximize()
+  win.isMaximized() ? win.unmaximize() : win.maximize()
 })
 
 // IPC channel for hiding window
