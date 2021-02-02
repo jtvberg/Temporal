@@ -1,4 +1,3 @@
-// TODO: Loaded sketches disappear on resize
 // TODO: Copy/Paste objects
 // TODO: Rework icon for Big Sur
 
@@ -20,11 +19,6 @@ ipcRenderer.on('save-settings', (e, data) => {
     onTop : $('.ontop-button').hasClass('ontop-locked')
   }
   localStorage.setItem('settings', JSON.stringify(settings))
-})
-
-// Redraw sketches on window resize
-ipcRenderer.on('redraw', () => {
-  // loadSketches()
 })
 
 // Load settings
@@ -84,10 +78,15 @@ function maxRestoreWindow () {
 }
 
 // Create canvases for sketch mode
-function sketchCanvas (canvasElement, strokeColor) {
+function sketchCanvas (canvasElement, strokeColor, id) {
   const canvas = canvasElement[0]
   const ctx = canvas.getContext('2d')
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  const image = new Image()
+  image.onload = function () {
+    ctx.drawImage(image, 0, 0)
+  }
+  image.src = localStorage.getItem('sketches') ? JSON.parse(localStorage.getItem('sketches'))[id] : 'data:image/png:base64,'
   const stroke = strokeColor
   const mouse = { x: 0, y: 0 }
 
@@ -114,11 +113,13 @@ function sketchCanvas (canvasElement, strokeColor) {
   $(window).on('resize', () => {
     canvasSize()
     ctx.putImageData(imageData, 0, 0)
+    ctx.drawImage(image, 0, 0)
     ctxSetup()
   })
 
   $(canvasElement).on('contextmenu', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    image.src = 'data:image/png:base64,'
   })
 
   canvas.addEventListener('mousemove', function (e) {
@@ -368,14 +369,7 @@ $('.header-bar').on('contextmenu', () => {
 
 // Iterate and instantiate sketch canvases
 $('.sketch').each(function () {
-  sketchCanvas($(this), $(this).css('color'))
-  const ctx = $(this)[0].getContext('2d')
-  const image = new Image()
-  image.onload = function () {
-    ctx.drawImage(image, 0, 0)
-  }
-  image.src = localStorage.getItem('sketches') ? JSON.parse(localStorage.getItem('sketches'))[$(this).data('val')] : 'data:image/png:base64,'
-  $(this).trigger('mousedown').trigger('mousemove').trigger('mouseup')
+  sketchCanvas($(this), $(this).css('color'), $(this).data('val'))
 })
 
 // Add note entry at point of click

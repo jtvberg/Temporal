@@ -37,11 +37,6 @@ const createWindow = () => {
     win.show()
   })
 
-  // Redraw canvas on resize
-  win.on('resize', () => {
-    win.webContents.send('redraw')
-  })
-
   // Open DevTools (dev only)
   // win.webContents.openDevTools()
 }
