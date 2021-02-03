@@ -1,5 +1,4 @@
 // TODO: Copy/Paste objects
-// TODO: Rework icon for Big Sur
 
 // Imports and variable declarations
 const { ipcRenderer, clipboard } = require('electron')
