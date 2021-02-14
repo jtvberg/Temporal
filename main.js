@@ -44,7 +44,7 @@ const createWindow = () => {
 // Tray icon
 let tray = null
 const createTray = () => {
-  tray = new Tray(path.join(__dirname, 'icon.png'))
+  tray = new Tray(path.join(__dirname, 'iconTemplate@2x.png'))
   tray.setToolTip('Temporal')
   tray.on('click', () => {
     win.isVisible() ? win.hide() : win.show()
@@ -70,7 +70,7 @@ app.whenReady().then(() => {
 app.on('before-quit', (e) => {
   if (!allowQuit) {
     e.preventDefault()
-    wb = win.getBounds()
+    let wb = win.getBounds()
     const data = {
       windowSizeLocation: { x: wb.x, y: wb.y, height: wb.height, width: wb.width }
     }
