@@ -188,3 +188,42 @@ body {
 .color-5 {
   color: #9155ad;
 }
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  font-family: Arial;
+  font-weight: 600;
+  font-size: 16px;
+  width: auto;
+  height: fit-content;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px;
+  position: absolute;
+  z-index: 100;
+  bottom: 100%;
+  top: 100%;
+  opacity: 0;
+  transition: opacity 1.5s;
+  transition-timing-function: step-end;
+}
+
+.tooltiptext-left {
+  left: 50%;
+}
+
+.tooltiptext-right {
+  right: 50%;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
