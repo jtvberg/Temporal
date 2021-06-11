@@ -1,8 +1,9 @@
 // Imports and variable declarations
-const { app, BrowserWindow, ipcMain, Tray } = require('electron')
+const { app, BrowserWindow, ipcMain, Tray, nativeTheme } = require('electron')
 const path = require('path')
 const updater = require('./updater')
 let allowQuit = false
+let vibrancyOn = true
 
 // Enable Electron-Reload (dev only)
 // require('electron-reload')(__dirname)
@@ -10,9 +11,6 @@ let allowQuit = false
 // Main window
 let win = null
 const createWindow = () => {
-  // Check for updates after 3 seconds
-  setTimeout(updater, 3000)
-
   // Create main window
   win = new BrowserWindow({
     width: 300,
@@ -23,8 +21,10 @@ const createWindow = () => {
     frame: false,
     show: false,
     hasShadow: false,
+    visualEffectState: 'active',
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       worldSafeExecuteJavaScript: true
     }
   })
@@ -38,7 +38,13 @@ const createWindow = () => {
   })
 
   // Open DevTools (dev only)
-  // win.webContents.openDevTools()
+  // win.webContents.openDevTools('detach')
+
+  // Set vibrancy to match theme on update
+  nativeTheme.themeSource = 'system'
+  nativeTheme.on('updated', () => {
+    vibrancySet()
+  })
 }
 
 // Tray icon
@@ -54,16 +60,34 @@ const createTray = () => {
   })
 }
 
+// Set vibrancy
+function vibrancySet() {
+  if (nativeTheme.shouldUseDarkColors) {
+    win.setVibrancy('dark')
+  } else {
+    win.setVibrancy('light')
+  }
+  if (!vibrancyOn) {
+    win.setVibrancy(null)
+  }
+}
+
 // Remove app from dock
 app.dock.hide()
 
 // Instantiate window and tray on app ready
 app.whenReady().then(() => {
-  createWindow()
-  createTray()
-  app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
+  try {
+    createWindow()
+    createTray()
+    // Check for updates after 3 seconds
+    setTimeout(updater, 3000)
+  } catch (err) { console.log(err) }
+})
+
+// Create window if one doesn't exist
+app.on('activate', function () {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
 // When closing set window size and location
@@ -108,4 +132,10 @@ ipcMain.on('win-max', () => {
 // IPC channel for hiding window
 ipcMain.on('win-hide', () => {
   win.hide()
+})
+
+// IPC channel for setting vibrancy
+ipcMain.on('trans-set', (e, bool) => {
+  vibrancyOn = bool
+  vibrancySet()
 })

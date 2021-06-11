@@ -330,6 +330,17 @@ $('.note-button').on('click', (e) => {
   $(`#note-button-${$(e.currentTarget).data('val')}`).addClass('note-button-selected')
 })
 
+// Toggle between transparency and vibrancy
+$('.trans-button').on('click', () => {
+  if ($('.trans-button').hasClass('trans-on')) {
+    ipcRenderer.send('trans-set', true)
+    $('.trans-button').removeClass('trans-on').addClass('trans-off')
+  } else {
+    ipcRenderer.send('trans-set', false)
+    $('.trans-button').removeClass('trans-off').addClass('trans-on')
+  }
+})
+
 // Toggle keep on top
 $('.ontop-button').on('click', function () {
   if ($(this).hasClass('ontop-locked')) {
@@ -359,6 +370,11 @@ $('.sketch-button').on('click', function () {
 // Header double-click handler
 $('.header-bar').on('dblclick', () => {
   maxRestoreWindow()
+})
+
+// Header button double-click handler (stop prop)
+$('.ontop-button, .trans-button, .note-button, .sketch-button').on('dblclick', (e) => {
+  e.stopPropagation()
 })
 
 // Header right-click handler

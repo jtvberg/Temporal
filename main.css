@@ -1,5 +1,5 @@
 body {
-  background-color: #161616be;
+  background-color: #1616169a;
   overflow: hidden;
 }
 
@@ -37,6 +37,25 @@ body {
   border-radius: 3px;
 }
 
+.control-button-host {
+  grid-row: 1;
+  display: flex;
+  margin-top: 1px;
+  -webkit-app-region: no-drag;
+}
+
+.right-control-host {
+  grid-column: 3;
+  justify-self: flex-end;
+  margin-right: 4px;
+}
+
+.left-control-host {
+  grid-column: 1;
+  justify-self: flex-start;
+  margin-left: 3px;
+}
+
 .note-button-host {
   grid-column: 2;
   grid-row: 1;
@@ -52,7 +71,7 @@ body {
 
 .note-button-selected:before {
   font-weight: 400;
-  content: '\f0c8';
+  content: '\f111';
 }
 
 .note-host {
@@ -108,29 +127,22 @@ body {
   z-index: 15;
 }
 
+.trans-button,
 .sketch-button,
 .ontop-button {
   color: #bebebe2d;
-  grid-row: 1;
-  margin-top: 1px;
 }
 
-.sketch-button {
-  grid-column: 1;
-  justify-self: flex-start;
-  margin-left: 3px;
-}
-
+.trans-button,
 .ontop-button {
-  grid-column: 3;
-  justify-self: flex-end;
-  margin-right: 4px;
+  margin-left: 4px;
 }
 
 .sketch-mode {
   color: #62faff;
 }
 
+.trans-button:hover,
 .sketch-button:hover,
 .ontop-button:hover {
   color: #d6d6d6;
@@ -142,6 +154,15 @@ body {
 
 .ontop-unlocked:before {
   content: '\f3c1';
+}
+
+.trans-on:before {
+  font-weight: 900;
+  content: '\f0c8';
+}
+
+.trans-off:before {
+  content: '\f0c8';
 }
 
 .color-0 {
