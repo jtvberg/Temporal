@@ -53,7 +53,7 @@ body {
 .left-control-host {
   grid-column: 1;
   justify-self: flex-start;
-  margin-left: 3px;
+  margin-left: 4px;
 }
 
 .note-button-host {

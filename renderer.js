@@ -239,6 +239,11 @@ $(document).on('click, mousedown', '.note-entry-host', function () {
   }
 })
 
+// Reset note etry size on right-click
+$(document).on('contextmenu', '.note-entry-host', function () {
+  $(this).css({ 'font-size': '' })
+})
+
 // Focus on note entry on click
 $(document).on('click', '.note-entry', function (e) {
   e.stopPropagation()
@@ -273,14 +278,16 @@ $(document).on('keydown', 'body', (e) => {
 
 // Zoom text size on mouse wheel
 $(document).on('wheel', '.note-entry', function (e) {
-  const delta = e.originalEvent.deltaY
-  let currentSize = $(e.target).css('font-size').replace('px', '')
-  if (delta < 0) {
-    currentSize++
-  } else if (currentSize > 8) {
-    currentSize--
+  if (e.ctrlKey) {
+    const delta = e.originalEvent.deltaY
+    let currentSize = $(e.target).closest('.note-entry-host').css('font-size').replace('px', '')
+    if (delta < 0) {
+      currentSize++
+    } else if (currentSize > 8) {
+      currentSize--
+    }
+    $(e.target).closest('.note-entry-host').css({ 'font-size': `${currentSize}px` })
   }
-  $(e.target).css({ 'font-size': `${currentSize}px` })
 })
 
 // Override paste to plain-text
@@ -313,8 +320,11 @@ $('.sketch').on('mouseup', () => {
 
 // Right-click on note button to clear it
 $('.note-button').on('contextmenu', (e) => {
-  $(`#note-${$(e.currentTarget).data('val')}`).empty()
-  saveNotes()
+  const confirmDelete = confirm('Delete all notes on this page?')
+  if (confirmDelete) {
+    $(`#note-${$(e.currentTarget).data('val')}`).empty()
+    saveNotes()
+  }
 })
 
 // Toggle to selected note/sketch pair; clear notes on metaKey
@@ -372,8 +382,8 @@ $('.header-bar').on('dblclick', () => {
   maxRestoreWindow()
 })
 
-// Header button double-click handler (stop prop)
-$('.ontop-button, .trans-button, .note-button, .sketch-button').on('dblclick', (e) => {
+// Header button double-click/right-click handler (stop prop)
+$('.ontop-button, .trans-button, .note-button, .sketch-button').on('dblclick, contextmenu', (e) => {
   e.stopPropagation()
 })
 
