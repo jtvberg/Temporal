@@ -9,37 +9,39 @@
     <title>Temporal</title>
   </head>
   <body>
-    <div class="header-bar">
-      <div class="control-button-host right-control-host">
-        <div class="far trans-off trans-button tooltip"><span class="tooltiptext tooltiptext-right">Transparency Toggle</span></div>
-        <div class="fas ontop-locked ontop-button tooltip"><span class="tooltiptext tooltiptext-right">Lock Window on Top Toggle</span></div>
+    <main>
+      <div class="header-bar">
+        <div class="control-button-host right-control-host">
+          <div class="far trans-off trans-button tooltip"><span class="tooltiptext tooltiptext-right">Transparency Toggle</span></div>
+          <div class="fas ontop-locked ontop-button tooltip"><span class="tooltiptext tooltiptext-right">Lock Window on Top Toggle</span></div>
+        </div>
+        <div class="note-button-host">
+          <div class="fas fa-circle color-0 note-button" id="note-button-0" data-val="0"></div>
+          <div class="fas fa-circle color-1 note-button" id="note-button-1" data-val="1"></div>
+          <div class="fas fa-circle color-2 note-button" id="note-button-2" data-val="2"></div>
+          <div class="fas fa-circle color-3 note-button" id="note-button-3" data-val="3"></div>
+          <div class="fas fa-circle color-4 note-button" id="note-button-4" data-val="4"></div>
+          <div class="fas fa-circle color-5 note-button" id="note-button-5" data-val="5"></div>
+        </div>
+        <div class="control-button-host left-control-host">
+          <div class="fas fa-pen sketch-button tooltip"><span class="tooltiptext tooltiptext-left">Sketch Mode Toggle</span></div>
+        </div>
       </div>
-      <div class="note-button-host">
-        <div class="fas fa-circle color-0 note-button" id="note-button-0" data-val="0"></div>
-        <div class="fas fa-circle color-1 note-button" id="note-button-1" data-val="1"></div>
-        <div class="fas fa-circle color-2 note-button" id="note-button-2" data-val="2"></div>
-        <div class="fas fa-circle color-3 note-button" id="note-button-3" data-val="3"></div>
-        <div class="fas fa-circle color-4 note-button" id="note-button-4" data-val="4"></div>
-        <div class="fas fa-circle color-5 note-button" id="note-button-5" data-val="5"></div>
+      <div class="note-host">
+        <div class="note color-0" id="note-0" data-val="0"></div>
+        <canvas class="sketch color-0" id="sketch-0" data-val="0"></canvas>
+        <div class="note color-1" id="note-1" data-val="1"></div>
+        <canvas class="sketch color-1" id="sketch-1" data-val="1"></canvas>
+        <div class="note color-2" id="note-2" data-val="2"></div>
+        <canvas class="sketch color-2" id="sketch-2" data-val="2"></canvas>
+        <div class="note color-3" id="note-3" data-val="3"></div>
+        <canvas class="sketch color-3" id="sketch-3" data-val="3"></canvas>
+        <div class="note color-4" id="note-4" data-val="4"></div>
+        <canvas class="sketch color-4" id="sketch-4" data-val="4"></canvas>
+        <div class="note color-5" id="note-5" data-val="5"></div>
+        <canvas class="sketch color-5" id="sketch-5" data-val="5"></canvas>
       </div>
-      <div class="control-button-host left-control-host">
-        <div class="fas fa-pen sketch-button tooltip"><span class="tooltiptext tooltiptext-left">Sketch Mode Toggle</span></div>
-      </div>
-    </div>
-    <div class="note-host">
-      <div class="note color-0" id="note-0" data-val="0"></div>
-      <canvas class="sketch color-0" id="sketch-0" data-val="0"></canvas>
-      <div class="note color-1" id="note-1" data-val="1"></div>
-      <canvas class="sketch color-1" id="sketch-1" data-val="1"></canvas>
-      <div class="note color-2" id="note-2" data-val="2"></div>
-      <canvas class="sketch color-2" id="sketch-2" data-val="2"></canvas>
-      <div class="note color-3" id="note-3" data-val="3"></div>
-      <canvas class="sketch color-3" id="sketch-3" data-val="3"></canvas>
-      <div class="note color-4" id="note-4" data-val="4"></div>
-      <canvas class="sketch color-4" id="sketch-4" data-val="4"></canvas>
-      <div class="note color-5" id="note-5" data-val="5"></div>
-      <canvas class="sketch color-5" id="sketch-5" data-val="5"></canvas>
-    </div>
+    </main>
     <script type="text/javascript" src="./renderer.js"></script>
   </body>
 </html>

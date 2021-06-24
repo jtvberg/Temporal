@@ -68,7 +68,7 @@ function changeWatch (note) {
 function maxRestoreWindow () {
   ipcRenderer.send('win-max')
   if ($('.header-bar').hasClass('header-bar-max')) {
-    $('body').css('background-color', '#161616be')
+    $('body').css('background-color', '')
     $('.header-bar').removeClass('header-bar-max')
   } else {
     $('body').css('background-color', '#00000000')
@@ -80,7 +80,7 @@ function maxRestoreWindow () {
 function sketchCanvas (canvasElement, strokeColor, id) {
   const canvas = canvasElement[0]
   const ctx = canvas.getContext('2d')
-  let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  // let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const image = new Image()
   image.onload = function () {
     ctx.drawImage(image, 0, 0)
@@ -90,8 +90,10 @@ function sketchCanvas (canvasElement, strokeColor, id) {
   const mouse = { x: 0, y: 0 }
 
   function canvasSize () {
-    canvas.width = $('.note-host').width()
-    canvas.height = $('.note-host').height()
+    // canvas.width = $('.note-host').width()
+    // canvas.height = $('.note-host').height()
+    canvas.width = '5120'
+    canvas.height = '2880'
   }
 
   function ctxSetup () {
@@ -109,12 +111,14 @@ function sketchCanvas (canvasElement, strokeColor, id) {
   canvasSize()
   ctxSetup()
 
-  $(window).on('resize', () => {
-    canvasSize()
-    ctx.putImageData(imageData, 0, 0)
-    ctx.drawImage(image, 0, 0)
-    ctxSetup()
-  })
+  // $(window).on('resize', () => {
+  //   canvasSize()
+  //   ctx.putImageData(imageData, 0, 0)
+  //   if (image) {
+  //     ctx.drawImage(image, 0, 0)
+  //   }
+  //   ctxSetup()
+  // })
 
   $(canvasElement).on('contextmenu', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -133,7 +137,7 @@ function sketchCanvas (canvasElement, strokeColor, id) {
   }, false)
 
   canvas.addEventListener('mouseup', () => {
-    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    // imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     canvas.removeEventListener('mousemove', onPaint, false)
   }, false)
 }
