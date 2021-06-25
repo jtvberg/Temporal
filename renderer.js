@@ -315,6 +315,12 @@ $(document).on('dblclick', '.note-entry', (e) => {
 // Get note content from local storage
 $('.note').each(function () {
   $(this)[0].innerHTML = localStorage.getItem('notes') ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
+  // $(this).children('.note-entry-host').each(function () {
+  //   const offSet = $(this).offset()
+  //   if (offSet.left > $(window).width() || offSet.top > $(window).height() || offSet.top < 0 || offSet.left < 0) {
+
+  //   }
+  // })
 })
 
 // Save sketches to local storage on mouse up
