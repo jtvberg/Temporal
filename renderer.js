@@ -278,11 +278,15 @@ $(document).on('keydown', 'body', (e) => {
       $('.ontop-button').trigger('click')
     }
   }
+  if (e.key === 'Escape') {
+    removeEmptyNoteEntries()
+  }
 })
 
 // Zoom text size on mouse wheel
 $(document).on('wheel', '.note-entry', function (e) {
   if (e.ctrlKey) {
+    $('.note-host').css('overflow', 'hidden')
     const delta = e.originalEvent.deltaY
     let currentSize = $(e.target).closest('.note-entry-host').css('font-size').replace('px', '')
     if (delta < 0) {
@@ -291,6 +295,8 @@ $(document).on('wheel', '.note-entry', function (e) {
       currentSize--
     }
     $(e.target).closest('.note-entry-host').css({ 'font-size': `${currentSize}px` })
+  } else {
+    $('.note-host').css('overflow', '')
   }
 })
 
