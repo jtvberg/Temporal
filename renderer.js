@@ -4,6 +4,7 @@
 const { ipcRenderer, clipboard } = require('electron')
 const $ = require('jquery')
 let change = false
+let curTrans = false
 let settings = []
 
 // Load methods
@@ -68,11 +69,24 @@ function changeWatch (note) {
 function maxRestoreWindow () {
   ipcRenderer.send('win-max')
   if ($('.header-bar').hasClass('header-bar-max')) {
+    setTransWindow(curTrans)
     $('body').css('background-color', '')
     $('.header-bar').removeClass('header-bar-max')
   } else {
+    setTransWindow(true)
     $('body').css('background-color', '#00000000')
     $('.header-bar').addClass('header-bar-max')
+  }
+}
+
+// Window transparency toggle
+function setTransWindow (trans) {
+  if (trans) {
+    ipcRenderer.send('trans-set', false)
+    $('.trans-button').removeClass('trans-off').addClass('trans-on')
+  } else {
+    ipcRenderer.send('trans-set', true)
+    $('.trans-button').removeClass('trans-on').addClass('trans-off')
   }
 }
 
@@ -126,8 +140,8 @@ function sketchCanvas (canvasElement, strokeColor, id) {
   })
 
   canvas.addEventListener('mousemove', function (e) {
-    mouse.x = e.pageX - this.offsetLeft
-    mouse.y = e.pageY - this.offsetTop
+    mouse.x = e.offsetX // e.pageX - this.offsetLeft
+    mouse.y = e.offsetY // e.pageY - this.offsetTop
   }, false)
 
   canvas.addEventListener('mousedown', () => {
@@ -358,13 +372,8 @@ $('.note-button').on('click', (e) => {
 
 // Toggle between transparency and vibrancy
 $('.trans-button').on('click', () => {
-  if ($('.trans-button').hasClass('trans-on')) {
-    ipcRenderer.send('trans-set', true)
-    $('.trans-button').removeClass('trans-on').addClass('trans-off')
-  } else {
-    ipcRenderer.send('trans-set', false)
-    $('.trans-button').removeClass('trans-off').addClass('trans-on')
-  }
+  curTrans = $('.trans-button').hasClass('trans-off')
+  setTransWindow(curTrans)
 })
 
 // Toggle keep on top
@@ -418,7 +427,7 @@ $('.note').on('click', function (e) {
   if ($(e.target).hasClass('note')) {
     const id = 'ne' + Date.now()
     const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
-    noteEntryHost.addClass('note-entry-host').css('left', e.pageX - this.offsetLeft).css('top', e.pageY - this.offsetTop).appendTo(this)
+    noteEntryHost.addClass('note-entry-host').css('left', e.offsetX).css('top', e.offsetY).appendTo(this)
     $('<div contenteditable="true"></div>').addClass('note-entry').appendTo(noteEntryHost).trigger('focus')
     dragElement($(`#${id}`)[0])
   }
