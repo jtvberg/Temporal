@@ -226,3 +226,32 @@ main {
   visibility: visible;
   opacity: 1;
 }
+
+.scroll-arrow {
+  display: none;
+  color: #8b8b8b;
+}
+
+.scroll-arrow-left {
+  position: absolute;
+  left: 5px;
+  top: calc(50% - 10px);
+}
+
+.scroll-arrow-right {
+  position: absolute;
+  right: 5px;
+  top: calc(50% - 10px);
+}
+
+.scroll-arrow-up {
+  position: absolute;
+  left: calc(50% - 10px);
+  top: 15px;
+}
+
+.scroll-arrow-down {
+  position: absolute;
+  left: calc(50% - 10px);
+  bottom: 20px;
+}

@@ -335,12 +335,6 @@ $(document).on('dblclick', '.note-entry', (e) => {
 // Get note content from local storage
 $('.note').each(function () {
   $(this)[0].innerHTML = localStorage.getItem('notes') ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
-  // $(this).children('.note-entry-host').each(function () {
-  //   const offSet = $(this).offset()
-  //   if (offSet.left > $(window).width() || offSet.top > $(window).height() || offSet.top < 0 || offSet.left < 0) {
-
-  //   }
-  // })
 })
 
 // Save sketches to local storage on mouse up
@@ -368,6 +362,7 @@ $('.note-button').on('click', (e) => {
   $('.note, .sketch').hide(0)
   $(`#note-${$(e.currentTarget).data('val')}, #sketch-${$(e.currentTarget).data('val')}`).show()
   $(`#note-button-${$(e.currentTarget).data('val')}`).addClass('note-button-selected')
+  $('.note-host').scrollTop(0).scrollLeft(0)
 })
 
 // Toggle between transparency and vibrancy
@@ -436,4 +431,24 @@ $('.note').on('click', function (e) {
 // Add drag behavior to note-entries
 $('.note-entry-host').each(function () {
   dragElement($(`#${this.id}`)[0])
+})
+
+// Mark direction of notes outside of view on scroll
+$('.note-host').on('scroll', function () {
+  $('.scroll-arrow').hide()
+  $('#note-0').children('.note-entry-host').each(function () {
+    const offSet = $(this).offset()
+    if (offSet.left > $(window).width()) {
+      $('.scroll-arrow-right').show()
+    }
+    if (offSet.top > $(window).height()) {
+      $('.scroll-arrow-down').show()
+    }
+    if (offSet.left < 0) {
+      $('.scroll-arrow-left').show()
+    }
+    if (offSet.top < 0) {
+      $('.scroll-arrow-up').show()
+    }
+  })
 })
