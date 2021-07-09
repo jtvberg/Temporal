@@ -238,6 +238,25 @@ function saveSketches () {
   localStorage.setItem('sketches', JSON.stringify(sketches))
 }
 
+// Mark direction of notes outside of view on scroll
+function showScrollCarets (el) {
+  $('.scroll-arrow').hide()
+  if ($(el).find('.note:visible').offset().left < 0) {
+    $('.scroll-arrow-left').show()
+  }
+  if ($(el).find('.note:visible').offset().top < 24) {
+    $('.scroll-arrow-up').show()
+  }
+  $(el).find('.note:visible').children('.note-entry-host').each(function () {
+    if ($(this).offset().left > $(window).width()) {
+      $('.scroll-arrow-right').show()
+    }
+    if ($(this).offset().top > $(window).height()) {
+      $('.scroll-arrow-down').show()
+    }
+  })
+}
+
 // Save note content to local storage
 $(document).on('blur', '.note-entry-host', () => {
   if (change) {
@@ -347,6 +366,8 @@ $('.note-button').on('contextmenu', (e) => {
   const confirmDelete = confirm('Delete all notes on this page?')
   if (confirmDelete) {
     $(`#note-${$(e.currentTarget).data('val')}`).empty()
+    $('.note-host').scrollTop(0).scrollLeft(0)
+    $('.scroll-arrow').hide()
     saveNotes()
   }
 })
@@ -433,22 +454,7 @@ $('.note-entry-host').each(function () {
   dragElement($(`#${this.id}`)[0])
 })
 
-// Mark direction of notes outside of view on scroll
+// Call scroll carets on scroll
 $('.note-host').on('scroll', function () {
-  $('.scroll-arrow').hide()
-  $('#note-0').children('.note-entry-host').each(function () {
-    const offSet = $(this).offset()
-    if (offSet.left > $(window).width()) {
-      $('.scroll-arrow-right').show()
-    }
-    if (offSet.top > $(window).height()) {
-      $('.scroll-arrow-down').show()
-    }
-    if (offSet.left < 0) {
-      $('.scroll-arrow-left').show()
-    }
-    if (offSet.top < 0) {
-      $('.scroll-arrow-up').show()
-    }
-  })
+  showScrollCarets(this)
 })
