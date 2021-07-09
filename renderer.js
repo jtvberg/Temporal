@@ -5,6 +5,7 @@ const { ipcRenderer, clipboard } = require('electron')
 const $ = require('jquery')
 let change = false
 let curTrans = false
+let scrollTimeout = null
 let settings = []
 
 // Load methods
@@ -457,4 +458,8 @@ $('.note-entry-host').each(function () {
 // Call scroll carets on scroll
 $('.note-host').on('scroll', function () {
   showScrollCarets(this)
+  if (scrollTimeout) { clearTimeout(scrollTimeout) }
+  scrollTimeout = setTimeout(function () {
+    $('.scroll-arrow').hide(300)
+  }, 500)
 })
