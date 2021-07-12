@@ -318,7 +318,7 @@ $(document).on('keydown', 'body', (e) => {
 })
 
 // Zoom text size on mouse wheel
-$(document).on('wheel', '.note-entry', function (e) {
+$(document).on('wheel', '.note-entry', (e) => {
   if (e.ctrlKey) {
     $('.note-host').css('overflow', 'hidden')
     const delta = e.originalEvent.deltaY
@@ -440,7 +440,7 @@ $('.sketch').each(function () {
 })
 
 // Add note entry at point of click
-$('.note').on('click', function (e) {
+$('.note').on('click', (e) => {
   if ($(e.target).hasClass('note')) {
     const id = 'ne' + Date.now()
     const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)

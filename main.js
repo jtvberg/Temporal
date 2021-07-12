@@ -86,7 +86,7 @@ app.whenReady().then(() => {
 })
 
 // Create window if one doesn't exist
-app.on('activate', function () {
+app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
@@ -105,7 +105,7 @@ app.on('before-quit', (e) => {
 })
 
 // CLose app if all windows are closed (not Mac)
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
   app.quit()
 })
 
@@ -115,12 +115,12 @@ ipcMain.on('set-window', (e, data) => {
 })
 
 // IPC channel for locking app on top
-ipcMain.on('ontop-lock', function () {
+ipcMain.on('ontop-lock', () => {
   win.setAlwaysOnTop(true, 'floating')
 })
 
 // IPC channel for unlocking app on top
-ipcMain.on('ontop-unlock', function () {
+ipcMain.on('ontop-unlock', () => {
   win.setAlwaysOnTop(false)
 })
 
