@@ -440,7 +440,7 @@ $('.sketch').each(function () {
 })
 
 // Add note entry at point of click
-$('.note').on('click', (e) => {
+$('.note').on('click', function (e) {
   if ($(e.target).hasClass('note')) {
     const id = 'ne' + Date.now()
     const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
