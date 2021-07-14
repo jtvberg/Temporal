@@ -1,11 +1,14 @@
 # Temporal
- Transient Note Taking and full screen annotation.
- Only 6 note 'pads'
- Tray resident only.
- Saves to local storage (no import/export.)
- Can be locked to stay on top of other windows.
- Toggle into sketch mode to free draw.
- Double-click the header to maximize and go into full screen/transparent mode to annotate docs. (Primary use-case is for telecommunication where you may want to mark-up a shared document for discussion.)
+ - Transient Note Taking and full screen annotation
+ - Only 6 note 'pads'
+ - Tray resident only
+ - Saves to local storage (no import/export)
+ - Can be locked to stay on top of other windows
+ - Toggle into sketch mode to free draw
+ - Toggle transparency vs. vibrancy modes (glass look)
+ - Note scrolling with hidden content indicators
+ - Ctrl+click on note button to delete all entries (with confirmation)
+ - Double-click the header to maximize and go into full screen/transparent mode to annotate docs. (Primary use-case is for telecommunication where you may want to mark-up a shared document for discussion.)
 
 #### Main Screen with Notes and Sketches:
 <img src="/screenshots/temporal_main.png" width="250"/>
