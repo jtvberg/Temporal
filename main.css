@@ -139,7 +139,7 @@ main {
 }
 
 .sketch-mode {
-  color: #62faff;
+  color: #e0e0e0;
 }
 
 .sketch-tool:hover, 
@@ -282,7 +282,21 @@ main {
   padding: 2px;
 }
 
+.sketch-color-pick,
 .sketch-tool {
   align-self: center;
   margin: 6px 2px;
+}
+
+.sketch-color-btn {
+  width: 15px;
+  color: #e0e0e0;
+}
+
+input[type=color] {
+  border: none;
+  padding: 0;
+  width: 0px;
+  height: 0px;
+  visibility: hidden;
 }

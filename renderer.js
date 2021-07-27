@@ -103,7 +103,7 @@ function sketchCanvas (canvasElement, strokeColor, id) {
     ctx.drawImage(image, 0, 0)
   }
   image.src = localStorage.getItem('sketches') ? JSON.parse(localStorage.getItem('sketches'))[id] : 'data:image/png:base64,'
-  const stroke = strokeColor
+  let stroke = strokeColor
   const mouse = { x: 0, y: 0 }
 
   function canvasSize () {
@@ -157,6 +157,13 @@ function sketchCanvas (canvasElement, strokeColor, id) {
     // imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     canvas.removeEventListener('mousemove', onPaint, false)
   }, false)
+
+  // Track color picker changes
+  $('.sketch-color-input').on('change', function () {
+    stroke = $(this).val()
+    ctxSetup()
+    $(this).parent().find('.sketch-color-btn').css('color', stroke)
+  })
 }
 
 // Note entry drag functions
@@ -448,7 +455,7 @@ $('.header-bar').on('contextmenu', () => {
 
 // Iterate and instantiate sketch canvases
 $('.sketch').each(function () {
-  sketchCanvas($(this), $(this).css('color'), $(this).data('val'))
+  sketchCanvas($(this), '#e0e0e0', $(this).data('val'))
 })
 
 // Add note entry at point of click
@@ -474,4 +481,9 @@ $('.note-host').on('scroll', function () {
   scrollTimeout = setTimeout(function () {
     $('.scroll-arrow').hide(300)
   }, 500)
+})
+
+// Activate color picker
+$('.sketch-color-btn').on('click', function () {
+  $(this).parent().find('.sketch-color-input').trigger('click')
 })
