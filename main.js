@@ -6,7 +6,7 @@ let allowQuit = false
 let vibrancyOn = true
 
 // Enable Electron-Reload (dev only)
-// require('electron-reload')(__dirname)
+require('electron-reload')(__dirname)
 
 // Main window
 let win = null
@@ -38,7 +38,7 @@ const createWindow = () => {
   })
 
   // Open DevTools (dev only)
-  // win.webContents.openDevTools('detach')
+  win.webContents.openDevTools('detach')
 
   // Set vibrancy to match theme on update
   nativeTheme.themeSource = 'system'

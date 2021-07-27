@@ -126,6 +126,7 @@ main {
   cursor: move;
 }
 
+.sketch-tool,
 .trans-button,
 .sketch-button,
 .ontop-button {
@@ -141,6 +142,7 @@ main {
   color: #62faff;
 }
 
+.sketch-tool:hover, 
 .trans-button:hover,
 .sketch-button:hover,
 .ontop-button:hover {
@@ -212,6 +214,7 @@ main {
   opacity: 0;
   transition: opacity 1.5s;
   transition-timing-function: step-end;
+  user-select: none;
 }
 
 .tooltiptext-left {
@@ -254,4 +257,32 @@ main {
   position: absolute;
   left: calc(50% - 10px);
   bottom: 20px;
+}
+
+.sketch-tool-panel {
+  position: absolute;
+  left: 0;
+  top: 23px;
+  height: calc(100% - 50px);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+  z-index: 1000;
+}
+
+.sketch-tool-host {
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  background-color: #161616be;
+  border-radius: 0px 7px 7px 0px;
+  padding: 2px;
+}
+
+.sketch-tool {
+  align-self: center;
+  margin: 6px 2px;
 }

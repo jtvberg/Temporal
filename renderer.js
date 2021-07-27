@@ -24,6 +24,8 @@ ipcRenderer.on('save-settings', (e, data) => {
 
 // Load settings
 function loadSettings () {
+  $('.sketch-tool-panel').hide()
+
   settings = localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings')) : getDefaultSettings()
 
   // Set window size and location
@@ -408,15 +410,25 @@ $('.ontop-button').on('click', function () {
 $('.sketch-button').on('click', function () {
   if ($(this).hasClass('sketch-mode')) {
     $(this).removeClass('sketch-mode')
+    $('.sketch-tool-panel').hide()
     $('.note').each(function () {
       $(this).css('z-index', '20')
     })
   } else {
     $(this).addClass('sketch-mode')
+    $('.sketch-tool-panel').show()
+    $('.sketch-tool').removeClass('sketch-mode')
+    $('#sketch-pencil').addClass('sketch-mode')
     $('.note').each(function () {
       $(this).css('z-index', '5')
     })
   }
+})
+
+// Sketch tools selection
+$('.sketch-tool').on('click', function () {
+  $('.sketch-tool').removeClass('sketch-mode')
+  $(this).addClass('sketch-mode')
 })
 
 // Header double-click handler
@@ -425,7 +437,7 @@ $('.header-bar').on('dblclick', () => {
 })
 
 // Header button double-click/right-click handler (stop prop)
-$('.ontop-button, .trans-button, .note-button, .sketch-button').on('dblclick, contextmenu', (e) => {
+$('.ontop-button, .trans-button, .note-button, .sketch-button').on('dblclick contextmenu', (e) => {
   e.stopPropagation()
 })
 
