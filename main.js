@@ -82,7 +82,7 @@ app.whenReady().then(() => {
     createTray()
     // Check for updates after 3 seconds
     setTimeout(updater, 3000)
-  } catch (err) { console.log(err) }
+  } catch (err) { console.error(err) }
 })
 
 // Create window if one doesn't exist

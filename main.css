@@ -293,6 +293,16 @@ main {
   color: #e0e0e0;
 }
 
+.sketch-shape {
+  position: absolute;
+  z-index: 50;
+  border: solid 1px red;
+}
+
+.sketch-shape:hover {
+  cursor: move;
+}
+
 input[type=color] {
   border: none;
   padding: 0;

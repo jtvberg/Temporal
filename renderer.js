@@ -7,6 +7,7 @@ let change = false
 let curTrans = false
 let scrollTimeout = null
 let settings = []
+let mode = ''
 
 // Load methods
 setFirstNote()
@@ -97,7 +98,6 @@ function setTransWindow (trans) {
 function sketchCanvas (canvasElement, strokeColor, id) {
   const canvas = canvasElement[0]
   const ctx = canvas.getContext('2d')
-  // let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const image = new Image()
   image.onload = function () {
     ctx.drawImage(image, 0, 0)
@@ -107,8 +107,6 @@ function sketchCanvas (canvasElement, strokeColor, id) {
   const mouse = { x: 0, y: 0 }
 
   function canvasSize () {
-    // canvas.width = $('.note-host').width()
-    // canvas.height = $('.note-host').height()
     canvas.width = '5120'
     canvas.height = '2880'
   }
@@ -128,23 +126,14 @@ function sketchCanvas (canvasElement, strokeColor, id) {
   canvasSize()
   ctxSetup()
 
-  // $(window).on('resize', () => {
-  //   canvasSize()
-  //   ctx.putImageData(imageData, 0, 0)
-  //   if (image) {
-  //     ctx.drawImage(image, 0, 0)
-  //   }
-  //   ctxSetup()
-  // })
-
   $(canvasElement).on('contextmenu', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     image.src = 'data:image/png:base64,'
   })
 
-  canvas.addEventListener('mousemove', function (e) {
-    mouse.x = e.offsetX // e.pageX - this.offsetLeft
-    mouse.y = e.offsetY // e.pageY - this.offsetTop
+  canvas.addEventListener('mousemove', (e) => {
+    mouse.x = e.offsetX
+    mouse.y = e.offsetY
   }, false)
 
   canvas.addEventListener('mousedown', () => {
@@ -154,7 +143,6 @@ function sketchCanvas (canvasElement, strokeColor, id) {
   }, false)
 
   canvas.addEventListener('mouseup', () => {
-    // imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     canvas.removeEventListener('mousemove', onPaint, false)
   }, false)
 
@@ -179,7 +167,7 @@ function dragElement (elmnt) {
   }
 
   function dragMouseDown (e) {
-    if (!$(e.target).hasClass('note-entry-host')) { return }
+    if (!$(e.target).hasClass('note-entry-host') && !$(e.target).hasClass('sketch-shape')) { return }
     e = e || window.event
     e.preventDefault()
     pos3 = e.clientX
@@ -199,8 +187,6 @@ function dragElement (elmnt) {
     pos4 = e.clientY
     elmnt.style.top = round(elmnt.offsetTop - pos2, pre) > 0 ? round(elmnt.offsetTop - pos2, pre) + 'px' : 0 + 'px'
     elmnt.style.left = round(elmnt.offsetLeft - pos1, pre) > 0 ? round(elmnt.offsetLeft - pos1, pre) + 'px' : 0 + 'px'
-    // elmnt.style.top = elmnt.offsetTop - pos2 > 0 ? Math.round((elmnt.offsetTop - pos2) / 20) * 20 + 'px' : 0 + 'px'
-    // elmnt.style.left = elmnt.offsetLeft - pos1 > 0 ? Math.round((elmnt.offsetLeft - pos1) / 20) * 20 + 'px' : 0 + 'px'
   }
 
   function closeDragElement () {
@@ -248,6 +234,14 @@ function saveSketches () {
   localStorage.setItem('sketches', JSON.stringify(sketches))
 }
 
+// Toggle sketch pad vs note pad
+function toggleSketch (show) {
+  let index = show ? 5 : 20
+  $('.note').each(function () {
+    $(this).css('z-index', index)
+  })
+}
+
 // Mark direction of notes outside of view on scroll
 function showScrollCarets (el) {
   $('.scroll-arrow').hide()
@@ -265,6 +259,16 @@ function showScrollCarets (el) {
       $('.scroll-arrow-down').show()
     }
   })
+}
+
+// Return a circle
+function addCircle (id, x, y, r) {
+  return $(`<div id="${id}" class="sketch-shape" style="left: ${x}px; top: ${y}px; height: ${r * 2}px; width: ${r * 2}px;"></div>`)
+}
+
+// Return a rectangle
+function addRect (id, x, y, w, h) {
+  return $(`<div id="${id}" class="sketch-shape" style="left: ${x}px; top: ${y}px; height: ${h}px; width: ${w}px;"></div>`)
 }
 
 // Save note content to local storage
@@ -418,18 +422,14 @@ $('.sketch-button').on('click', function () {
   if ($(this).hasClass('sketch-mode')) {
     $(this).removeClass('sketch-mode')
     $('.sketch-tool-panel').hide()
-    $('.note').each(function () {
-      $(this).css('z-index', '20')
-    })
+    toggleSketch(false)
   } else {
     $(this).addClass('sketch-mode')
     $('.sketch-tool-panel').show()
-    $('.sketch-tool').removeClass('sketch-mode')
-    $('#sketch-pencil').addClass('sketch-mode')
-    $('.note').each(function () {
-      $(this).css('z-index', '5')
-    })
+    $('#sketch-pencil').trigger('click')
+    toggleSketch(true)
   }
+  mode = ''
 })
 
 // Sketch tools selection
@@ -462,15 +462,27 @@ $('.sketch').each(function () {
 $('.note').on('click', function (e) {
   if ($(e.target).hasClass('note')) {
     const id = 'ne' + Date.now()
-    const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
-    noteEntryHost.addClass('note-entry-host').css('left', e.offsetX).css('top', e.offsetY).appendTo(this)
-    $('<div contenteditable="true"></div>').addClass('note-entry').appendTo(noteEntryHost).trigger('focus')
+    switch (mode) {
+      case 'circle': {
+        addCircle(id, e.offsetX, e.offsetY, 50).appendTo(this)
+        break
+      }
+      case 'rect': {
+        addRect(id, e.offsetX, e.offsetY, 50, 50).appendTo(this)
+        break
+      }
+      default: {
+        const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
+        noteEntryHost.addClass('note-entry-host').css('left', e.offsetX).css('top', e.offsetY).appendTo(this)
+        $('<div contenteditable="true"></div>').addClass('note-entry').appendTo(noteEntryHost).trigger('focus')
+      }
+    }
     dragElement($(`#${id}`)[0])
   }
 })
 
 // Add drag behavior to note-entries
-$('.note-entry-host').each(function () {
+$('.note-entry-host, .sketch-shape').each(function () {
   dragElement($(`#${this.id}`)[0])
 })
 
@@ -486,4 +498,21 @@ $('.note-host').on('scroll', function () {
 // Activate color picker
 $('.sketch-color-btn').on('click', function () {
   $(this).parent().find('.sketch-color-input').trigger('click')
+})
+
+// Activate circle mode
+$('#sketch-circle').on('click', function () {
+  toggleSketch(false)
+  mode = 'circle'
+})
+
+// Activate rectangle mode
+$('#sketch-rect').on('click', function () {
+  toggleSketch(false)
+  mode = 'rect'
+})
+
+// Actiave pencil mode (default sketch mode)
+$('#sketch-pencil').on('click', function () {
+  toggleSketch(true)
 })
