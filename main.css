@@ -297,6 +297,8 @@ main {
   position: absolute;
   z-index: 50;
   border: solid 1px red;
+  min-width: 15px;
+  min-height: 15px;
 }
 
 .sketch-shape:hover {
@@ -309,4 +311,21 @@ input[type=color] {
   width: 0px;
   height: 0px;
   visibility: hidden;
+}
+
+.resizer {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-bottom: 15px solid red;
+  border-left: 15px solid transparent;
+  right: 0;
+  bottom: 0;
+  cursor: se-resize;
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.resizer:hover {
+  opacity: 1;
 }

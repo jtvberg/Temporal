@@ -123,12 +123,16 @@ function sketchCanvas (canvasElement, strokeColor, id) {
     ctx.stroke()
   }
 
+  function clearSketch () {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    image.src = 'data:image/png:base64,'
+  }
+
   canvasSize()
   ctxSetup()
 
   $(canvasElement).on('contextmenu', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    image.src = 'data:image/png:base64,'
+    clearSketch()
   })
 
   canvas.addEventListener('mousemove', (e) => {
@@ -206,8 +210,8 @@ function dragElement (elmnt) {
 // Remove empty note-entries
 function removeEmptyNoteEntries () {
   $('.note-entry-host').each(function () {
-    if (!$(this).find('.note-entry').text().trim().length > 0 && !$(this).hasClass('remove')) {
-      $(this).addClass('remove').remove()
+    if (!$(this).find('.note-entry').text().trim().length > 0) {
+      $(this).remove()
     }
   })
 }
@@ -263,16 +267,39 @@ function showScrollCarets (el) {
 
 // Return a circle
 function addCircle (id, x, y, r) {
-  return $(`<div id="${id}" class="sketch-shape" style="left: ${x}px; top: ${y}px; height: ${r * 2}px; width: ${r * 2}px;"></div>`)
+  return $(`<div id="${id}" class="sketch-shape" tabindex="0" style="left: ${x}px; top: ${y}px; height: ${r}px; width: ${r}px; border-radius: 50%"></div>`)
 }
 
 // Return a rectangle
 function addRect (id, x, y, w, h) {
-  return $(`<div id="${id}" class="sketch-shape" style="left: ${x}px; top: ${y}px; height: ${h}px; width: ${w}px;"></div>`)
+  return $(`<div id="${id}" class="sketch-shape" tabindex="0" style="left: ${x}px; top: ${y}px; height: ${h}px; width: ${w}px;"></div>`)
+}
+
+// Add resize glyph to element
+function addResize(element) {
+  let resizer = document.createElement('div')
+  resizer.className = 'resizer'
+
+  element.appendChild(resizer)
+  resizer.addEventListener('mousedown', initResize, false)
+
+  function initResize() {
+    window.addEventListener('mousemove', resize, false)
+    window.addEventListener('mouseup', stopResize, false)
+  }
+  function resize(e) {
+    element.style.width = (e.clientX - element.offsetLeft) + 'px'
+    element.style.height = (e.clientY - element.offsetTop) + 'px'
+    saveNotes()
+  }
+  function stopResize() {
+    window.removeEventListener('mousemove', resize, false)
+    window.removeEventListener('mouseup', stopResize, false)
+  }
 }
 
 // Save note content to local storage
-$(document).on('blur', '.note-entry-host', () => {
+$(document).on('blur', '.note-entry-host, .sketch-shape', () => {
   if (change) {
     // Remove empty note-entries and save all notes
     removeEmptyNoteEntries()
@@ -281,7 +308,7 @@ $(document).on('blur', '.note-entry-host', () => {
 })
 
 // Focus on note entry host on click
-$(document).on('click, mousedown', '.note-entry-host', function () {
+$(document).on('click, mousedown', '.note-entry-host, .sketch-shape', function () {
   try {
     $(this).trigger('focus')
     removeEmptyNoteEntries()
@@ -302,8 +329,8 @@ $(document).on('click', '.note-entry', function (e) {
 })
 
 // Delete note-entry handler
-$(document).on('keydown', '.note-entry-host', (e) => {
-  if ($(e.target).hasClass('note-entry-host') && (e.key === 'Delete' || e.key === 'Backspace')) {
+$(document).on('keydown', '.note-entry-host, .sketch-shape', (e) => {
+  if (($(e.target).hasClass('note-entry-host') || $(e.target).hasClass('sketch-shape')) && (e.key === 'Delete' || e.key === 'Backspace')) {
     $(e.target).remove()
     saveNotes()
   }
@@ -382,7 +409,9 @@ $('.note-button').on('contextmenu', (e) => {
     $(`#note-${$(e.currentTarget).data('val')}`).empty()
     $('.note-host').scrollTop(0).scrollLeft(0)
     $('.scroll-arrow').hide()
+    $(`#sketch-${$(e.currentTarget).data('val')}`).trigger('contextmenu')
     saveNotes()
+    saveSketches()
   }
 })
 
@@ -464,11 +493,17 @@ $('.note').on('click', function (e) {
     const id = 'ne' + Date.now()
     switch (mode) {
       case 'circle': {
-        addCircle(id, e.offsetX, e.offsetY, 50).appendTo(this)
+        const ele = addCircle(id, e.offsetX, e.offsetY, 50)
+        ele.appendTo(this)
+        $(ele).trigger('focus')
+        addResize(ele[0])
         break
       }
       case 'rect': {
-        addRect(id, e.offsetX, e.offsetY, 50, 50).appendTo(this)
+        const ele = addRect(id, e.offsetX, e.offsetY, 50, 50)
+        ele.appendTo(this)
+        $(ele).trigger('focus')
+        addResize(ele[0])
         break
       }
       default: {
@@ -482,8 +517,14 @@ $('.note').on('click', function (e) {
 })
 
 // Add drag behavior to note-entries
-$('.note-entry-host, .sketch-shape').each(function () {
+$('.note-entry-host').each(function () {
   dragElement($(`#${this.id}`)[0])
+})
+
+// Add drag/resize behavior to sketch-shapes
+$('.sketch-shape').each(function () {
+  dragElement($(`#${this.id}`)[0])
+  addResize(this)
 })
 
 // Call scroll carets on scroll
