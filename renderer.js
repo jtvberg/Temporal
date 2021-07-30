@@ -7,6 +7,7 @@ let change = false
 let curTrans = false
 let scrollTimeout = null
 let settings = []
+let clickOnce = true
 let mode = ''
 
 // Load methods
@@ -266,17 +267,17 @@ function showScrollCarets (el) {
 }
 
 // Return a circle
-function addCircle (id, x, y, r) {
-  return $(`<div id="${id}" class="sketch-shape" tabindex="0" style="left: ${x}px; top: ${y}px; height: ${r}px; width: ${r}px; border-radius: 50%"></div>`)
+function addCircle (id, x, y, r, color) {
+  return $(`<div id="${id}" class="sketch-shape" tabindex="0" style="left: ${x}px; top: ${y}px; height: ${r}px; width: ${r}px; border-radius: 50%; border-color: ${color};"></div>`)
 }
 
 // Return a rectangle
-function addRect (id, x, y, w, h) {
-  return $(`<div id="${id}" class="sketch-shape" tabindex="0" style="left: ${x}px; top: ${y}px; height: ${h}px; width: ${w}px;"></div>`)
+function addRect (id, x, y, w, h, color) {
+  return $(`<div id="${id}" class="sketch-shape" tabindex="0" style="left: ${x}px; top: ${y}px; height: ${h}px; width: ${w}px; border-color: ${color};"></div>`)
 }
 
 // Add resize glyph to element
-function addResize(element) {
+function addResize (element) {
   let resizer = document.createElement('div')
   resizer.className = 'resizer'
 
@@ -290,11 +291,12 @@ function addResize(element) {
   function resize(e) {
     element.style.width = (e.clientX - element.offsetLeft) + 'px'
     element.style.height = (e.clientY - element.offsetTop) + 'px'
-    saveNotes()
   }
   function stopResize() {
     window.removeEventListener('mousemove', resize, false)
     window.removeEventListener('mouseup', stopResize, false)
+    clickOnce = false
+    saveNotes()
   }
 }
 
@@ -309,6 +311,7 @@ $(document).on('blur', '.note-entry-host, .sketch-shape', () => {
 
 // Focus on note entry host on click
 $(document).on('click, mousedown', '.note-entry-host, .sketch-shape', function () {
+  clickOnce = false
   try {
     $(this).trigger('focus')
     removeEmptyNoteEntries()
@@ -490,29 +493,34 @@ $('.sketch').each(function () {
 // Add note entry at point of click
 $('.note').on('click', function (e) {
   if ($(e.target).hasClass('note')) {
-    const id = 'ne' + Date.now()
-    switch (mode) {
-      case 'circle': {
-        const ele = addCircle(id, e.offsetX, e.offsetY, 50)
-        ele.appendTo(this)
-        $(ele).trigger('focus')
-        addResize(ele[0])
-        break
+    if (clickOnce) {
+      const id = 'ne' + Date.now()
+      switch (mode) {
+        case 'circle': {
+          const ele = addCircle(id, e.offsetX, e.offsetY, 50, $('.sketch-color-input').val())
+          ele.appendTo(this)
+          $(ele).trigger('focus')
+          addResize(ele[0])
+          break
+        }
+        case 'rect': {
+          const ele = addRect(id, e.offsetX, e.offsetY, 50, 50, $('.sketch-color-input').val())
+          ele.appendTo(this)
+          $(ele).trigger('focus')
+          addResize(ele[0])
+          break
+        }
+        default: {
+          const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
+          noteEntryHost.addClass('note-entry-host').css('left', e.offsetX).css('top', e.offsetY).appendTo(this)
+          $('<div contenteditable="true"></div>').addClass('note-entry').appendTo(noteEntryHost).trigger('focus')
+        }
       }
-      case 'rect': {
-        const ele = addRect(id, e.offsetX, e.offsetY, 50, 50)
-        ele.appendTo(this)
-        $(ele).trigger('focus')
-        addResize(ele[0])
-        break
-      }
-      default: {
-        const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
-        noteEntryHost.addClass('note-entry-host').css('left', e.offsetX).css('top', e.offsetY).appendTo(this)
-        $('<div contenteditable="true"></div>').addClass('note-entry').appendTo(noteEntryHost).trigger('focus')
-      }
+      dragElement($(`#${id}`)[0])
+      clickOnce = false
+    } else {
+      clickOnce = true
     }
-    dragElement($(`#${id}`)[0])
   }
 })
 
@@ -542,18 +550,23 @@ $('.sketch-color-btn').on('click', function () {
 })
 
 // Activate circle mode
-$('#sketch-circle').on('click', function () {
+$('#sketch-circle').on('click', () => {
   toggleSketch(false)
   mode = 'circle'
 })
 
 // Activate rectangle mode
-$('#sketch-rect').on('click', function () {
+$('#sketch-rect').on('click', () => {
   toggleSketch(false)
   mode = 'rect'
 })
 
 // Actiave pencil mode (default sketch mode)
-$('#sketch-pencil').on('click', function () {
+$('#sketch-pencil').on('click', () => {
   toggleSketch(true)
+})
+
+// Set clickOnce so a note click will create the shape
+$('.sketch-tool').on('click', () => {
+  clickOnce = true
 })

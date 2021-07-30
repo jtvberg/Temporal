@@ -10,7 +10,7 @@ body {
 
 main {
   display: grid;
-  grid-template-rows: 21px auto;
+  grid-template-rows: 26px auto;
   position: fixed;
 }
 
@@ -19,7 +19,7 @@ main {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   grid-template-rows: 1fr;
-  padding-top: 2px;
+  padding-top: 4px;
   z-index: 100;
   -webkit-app-region: drag;
 }
@@ -28,7 +28,8 @@ main {
   background-color: #161616be;
   margin: auto;
   width: 300px;
-  border-radius: 3px;
+  border-radius: 5px;
+  padding-top: 1px;
 }
 
 .control-button-host {
@@ -54,8 +55,8 @@ main {
   grid-column: 2;
   grid-row: 1;
   display: flex;
-  justify-content: center;
   padding-top: 1px;
+  justify-content: center;
 }
 
 .note-button {
@@ -289,14 +290,14 @@ main {
 }
 
 .sketch-color-btn {
-  width: 15px;
+  width: 18px;
   color: #e0e0e0;
 }
 
 .sketch-shape {
   position: absolute;
   z-index: 50;
-  border: solid 1px red;
+  border: solid 3px red;
   min-width: 15px;
   min-height: 15px;
 }
@@ -317,7 +318,7 @@ input[type=color] {
   position: absolute;
   width: 0;
   height: 0;
-  border-bottom: 15px solid red;
+  border-bottom: 15px solid #e0e0e0;
   border-left: 15px solid transparent;
   right: 0;
   bottom: 0;
