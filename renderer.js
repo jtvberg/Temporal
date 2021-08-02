@@ -256,7 +256,7 @@ function showScrollCarets (el) {
   if ($(el).find('.note:visible').offset().top < 24) {
     $('.scroll-arrow-up').show()
   }
-  $(el).find('.note:visible').children('.note-entry-host').each(function () {
+  $(el).find('.note:visible').children('.note-entry-host, .sketch-shape').each(function () {
     if ($(this).offset().left > $(window).width()) {
       $('.scroll-arrow-right').show()
     }
@@ -541,7 +541,7 @@ $('.note-host').on('scroll', function () {
   if (scrollTimeout) { clearTimeout(scrollTimeout) }
   scrollTimeout = setTimeout(function () {
     $('.scroll-arrow').hide(300)
-  }, 500)
+  }, 800)
 })
 
 // Activate color picker
