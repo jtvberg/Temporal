@@ -9,6 +9,7 @@ let scrollTimeout = null
 let settings = []
 let clickOnce = true
 let mode = ''
+let curShapeId = null
 
 // Load methods
 setFirstNote()
@@ -151,11 +152,14 @@ function sketchCanvas (canvasElement, strokeColor, id) {
     canvas.removeEventListener('mousemove', onPaint, false)
   }, false)
 
-  // Track color picker changes
-  $('.sketch-color-input').on('change', function () {
+  // Track color picker input
+  $('.sketch-color-input').on('input', function () {
     stroke = $(this).val()
     ctxSetup()
     $(this).parent().find('.sketch-color-btn').css('color', stroke)
+    if (curShapeId) {
+      $(`#${curShapeId}`).css('border-color', stroke)
+    }
   })
 }
 
@@ -219,6 +223,7 @@ function removeEmptyNoteEntries () {
 
 // Save all notes
 function saveNotes () {
+  console.log('save')
   const notes = []
   $('.note').each(function () {
     notes.push($(this)[0].innerHTML)
@@ -296,6 +301,7 @@ function addResize (element) {
     window.removeEventListener('mousemove', resize, false)
     window.removeEventListener('mouseup', stopResize, false)
     clickOnce = false
+    console.log('resize save')
     saveNotes()
   }
 }
@@ -303,17 +309,23 @@ function addResize (element) {
 // Save note content to local storage
 $(document).on('blur', '.note-entry-host, .sketch-shape', () => {
   if (change) {
-    // Remove empty note-entries and save all notes
-    removeEmptyNoteEntries()
+    console.log('blur save')
     saveNotes()
   }
 })
 
 // Focus on note entry host on click
-$(document).on('click, mousedown', '.note-entry-host, .sketch-shape', function () {
-  clickOnce = false
+$(document).on('click, mousedown', function (e) {
   try {
-    $(this).trigger('focus')
+    if ($(e.target).hasClass('note-entry-host')) {
+      $(e.target).trigger('focus')
+    }
+    if ($(e.target).hasClass('sketch-shape')) {
+      $(e.target).trigger('focus')
+      curShapeId = $(e.target).prop('id')
+    } else if (!$(e.target).hasClass('sketch-color-btn')) {
+      curShapeId = null
+    }
     removeEmptyNoteEntries()
   } catch (err) {
     // Ignore, this is a known jquery issue
@@ -335,6 +347,7 @@ $(document).on('click', '.note-entry', function (e) {
 $(document).on('keydown', '.note-entry-host, .sketch-shape', (e) => {
   if (($(e.target).hasClass('note-entry-host') || $(e.target).hasClass('sketch-shape')) && (e.key === 'Delete' || e.key === 'Backspace')) {
     $(e.target).remove()
+    console.log('esc save')
     saveNotes()
   }
 })
@@ -413,6 +426,7 @@ $('.note-button').on('contextmenu', (e) => {
     $('.note-host').scrollTop(0).scrollLeft(0)
     $('.scroll-arrow').hide()
     $(`#sketch-${$(e.currentTarget).data('val')}`).trigger('contextmenu')
+    console.log('delete save')
     saveNotes()
     saveSketches()
   }
@@ -500,6 +514,7 @@ $('.note').on('click', function (e) {
           const ele = addCircle(id, e.offsetX, e.offsetY, 50, $('.sketch-color-input').val())
           ele.appendTo(this)
           $(ele).trigger('focus')
+          curShapeId = id
           addResize(ele[0])
           break
         }
@@ -507,6 +522,7 @@ $('.note').on('click', function (e) {
           const ele = addRect(id, e.offsetX, e.offsetY, 50, 50, $('.sketch-color-input').val())
           ele.appendTo(this)
           $(ele).trigger('focus')
+          curShapeId = id
           addResize(ele[0])
           break
         }
@@ -569,4 +585,11 @@ $('#sketch-pencil').on('click', () => {
 // Set clickOnce so a note click will create the shape
 $('.sketch-tool').on('click', () => {
   clickOnce = true
+})
+
+// Save when change is complete
+$('.sketch-color-input').on('change', function () {
+  clickOnce = false
+  console.log('color save')
+  saveNotes()
 })

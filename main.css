@@ -42,13 +42,13 @@ main {
 .right-control-host {
   grid-column: 3;
   justify-self: flex-end;
-  margin-right: 4px;
+  margin-right: 6px;
 }
 
 .left-control-host {
   grid-column: 1;
   justify-self: flex-start;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 
 .note-button-host {
