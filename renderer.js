@@ -10,6 +10,7 @@ let settings = []
 let clickOnce = true
 let mode = ''
 let curShapeId = null
+let curNoteId = null
 
 // Load methods
 setFirstNote()
@@ -156,7 +157,7 @@ function sketchCanvas (canvasElement, strokeColor, id) {
   $('.sketch-color-input').on('input', function () {
     stroke = $(this).val()
     ctxSetup()
-    $(this).parent().find('.sketch-color-btn').css('color', stroke)
+    $(this).parent().find('.sketch-color-button').css('color', stroke)
     if (curShapeId) {
       $(`#${curShapeId}`).css('border-color', stroke)
     }
@@ -319,11 +320,15 @@ $(document).on('click, mousedown', function (e) {
   try {
     if ($(e.target).hasClass('note-entry-host')) {
       $(e.target).trigger('focus')
+      curNoteId = $(e.target).prop('id')
+    } else if (!$(e.target).hasClass('check-button')) {
+      curNoteId = null
     }
+    console.log(curNoteId)
     if ($(e.target).hasClass('sketch-shape')) {
       $(e.target).trigger('focus')
       curShapeId = $(e.target).prop('id')
-    } else if (!$(e.target).hasClass('sketch-color-btn')) {
+    } else if (!$(e.target).hasClass('sketch-color-button')) {
       curShapeId = null
     }
     removeEmptyNoteEntries()
@@ -408,6 +413,17 @@ $(document).on('dblclick', '.note-entry', (e) => {
   e.stopPropagation()
 })
 
+// Toggle check boxes
+$(document).on('click', '.note-entry-check', function () {
+  if ($(this).hasClass('note-entry-unchecked')) {
+    $(this).removeClass('note-entry-unchecked')
+    $(this).addClass('note-entry-checked')
+  } else {
+    $(this).removeClass('note-entry-checked')
+    $(this).addClass('note-entry-unchecked')
+  }
+})
+
 // Get note content from local storage
 $('.note').each(function () {
   $(this)[0].innerHTML = localStorage.getItem('notes') ? JSON.parse(localStorage.getItem('notes'))[$(this).data('val')] : ''
@@ -490,7 +506,7 @@ $('.header-bar').on('dblclick', () => {
 })
 
 // Header button double-click/right-click handler (stop prop)
-$('.ontop-button, .trans-button, .note-button, .sketch-button').on('dblclick contextmenu', (e) => {
+$('.ontop-button, .trans-button, .note-button, .sketch-button, .check-button').on('dblclick contextmenu', (e) => {
   e.stopPropagation()
 })
 
@@ -561,7 +577,7 @@ $('.note-host').on('scroll', function () {
 })
 
 // Activate color picker
-$('.sketch-color-btn').on('click', function () {
+$('.sketch-color-button').on('click', function () {
   $(this).parent().find('.sketch-color-input').trigger('click')
 })
 
@@ -592,4 +608,14 @@ $('.sketch-color-input').on('change', function () {
   clickOnce = false
   console.log('color save')
   saveNotes()
+})
+
+// Add check boxes to note entry
+$('.check-button').on('click', () => {
+  if ($(`#${curNoteId} > div`).find('.note-entry-check').length > 0) {
+    $(`#${curNoteId} > div`).find('.note-entry-check').remove()
+  } else {
+    let checkBox = '<span class="far note-entry-check note-entry-unchecked">&nbsp;</span>'
+    $(`#${curNoteId} > div`).prepend(checkBox).children('div').prepend(checkBox)
+  }
 })

@@ -127,6 +127,7 @@ main {
   cursor: move;
 }
 
+.check-button,
 .sketch-tool,
 .trans-button,
 .sketch-button,
@@ -139,10 +140,12 @@ main {
   margin-left: 4px;
 }
 
-.sketch-mode {
-  color: #e0e0e0;
+.check-button,
+.sketch-button {
+  margin-right: 4px;
 }
 
+.check-button:hover,
 .sketch-tool:hover, 
 .trans-button:hover,
 .sketch-button:hover,
@@ -165,6 +168,10 @@ main {
 
 .trans-off:before {
   content: '\f0c8';
+}
+
+.sketch-mode {
+  color: #e0e0e0;
 }
 
 .color-0 {
@@ -289,7 +296,7 @@ main {
   margin: 6px 2px;
 }
 
-.sketch-color-btn {
+.sketch-color-button {
   width: 18px;
   color: #e0e0e0;
 }
@@ -329,4 +336,16 @@ input[type=color] {
 
 .resizer:hover {
   opacity: 1;
+}
+
+.note-entry-check {
+  cursor: pointer;
+}
+
+.note-entry-unchecked:before {
+  content: '\f0c8';
+}
+
+.note-entry-checked:before {
+  content: '\f14a';
 }
