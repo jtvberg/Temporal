@@ -6,7 +6,7 @@ let allowQuit = false
 let vibrancyOn = true
 
 // Enable Electron-Reload (dev only)
-require('electron-reload')(__dirname)
+// require('electron-reload')(__dirname)
 
 // Main window
 let win = null
@@ -30,7 +30,7 @@ const createWindow = () => {
   })
 
   // HTML file to load into window
-  win.loadFile('main.html')
+  // win.loadFile('main.html')
 
   // Show window when ready
   win.once('ready-to-show', () => {

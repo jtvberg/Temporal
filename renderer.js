@@ -224,7 +224,6 @@ function removeEmptyNoteEntries () {
 
 // Save all notes
 function saveNotes () {
-  console.log('save')
   const notes = []
   $('.note').each(function () {
     notes.push($(this)[0].innerHTML)
@@ -302,7 +301,6 @@ function addResize (element) {
     window.removeEventListener('mousemove', resize, false)
     window.removeEventListener('mouseup', stopResize, false)
     clickOnce = false
-    console.log('resize save')
     saveNotes()
   }
 }
@@ -310,7 +308,6 @@ function addResize (element) {
 // Save note content to local storage
 $(document).on('blur', '.note-entry-host, .sketch-shape', () => {
   if (change) {
-    console.log('blur save')
     saveNotes()
   }
 })
@@ -324,7 +321,6 @@ $(document).on('click, mousedown', function (e) {
     } else if (!$(e.target).hasClass('check-button')) {
       curNoteId = null
     }
-    console.log(curNoteId)
     if ($(e.target).hasClass('sketch-shape')) {
       $(e.target).trigger('focus')
       curShapeId = $(e.target).prop('id')
@@ -352,7 +348,6 @@ $(document).on('click', '.note-entry', function (e) {
 $(document).on('keydown', '.note-entry-host, .sketch-shape', (e) => {
   if (($(e.target).hasClass('note-entry-host') || $(e.target).hasClass('sketch-shape')) && (e.key === 'Delete' || e.key === 'Backspace')) {
     $(e.target).remove()
-    console.log('esc save')
     saveNotes()
   }
 })
@@ -442,7 +437,6 @@ $('.note-button').on('contextmenu', (e) => {
     $('.note-host').scrollTop(0).scrollLeft(0)
     $('.scroll-arrow').hide()
     $(`#sketch-${$(e.currentTarget).data('val')}`).trigger('contextmenu')
-    console.log('delete save')
     saveNotes()
     saveSketches()
   }
@@ -606,7 +600,6 @@ $('.sketch-tool').on('click', () => {
 // Save when change is complete
 $('.sketch-color-input').on('change', function () {
   clickOnce = false
-  console.log('color save')
   saveNotes()
 })
 
