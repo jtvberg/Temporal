@@ -5,9 +5,9 @@ const { ipcRenderer, clipboard } = require('electron')
 const $ = require('jquery')
 let change = false
 let curTrans = false
+let noFocus = false
 let scrollTimeout = null
 let settings = []
-let clickOnce = true
 let mode = ''
 
 // Load methods
@@ -299,7 +299,6 @@ function addResize (element) {
   function stopResize() {
     window.removeEventListener('mousemove', resize, false)
     window.removeEventListener('mouseup', stopResize, false)
-    clickOnce = false
     saveNotes()
   }
 }
@@ -313,7 +312,6 @@ $(document).on('blur', '.note-entry-host, .sketch-shape', () => {
 
 // Focus on note entry host on click
 $(document).on('mousedown', function (e) {
-  if (!$(e.target).hasClass('note') && !$(e.target).hasClass('sketch') && !$(e.target).hasClass('note-entry')) { e.preventDefault() }
   try {
     if ($(e.target).hasClass('note-entry-host') || $(e.target).hasClass('sketch-shape')) {
       $(e.target).trigger('focus')
@@ -497,37 +495,44 @@ $('.sketch').each(function () {
   sketchCanvas($(this), '#e0e0e0', $(this).data('val'))
 })
 
+// Track if a note element is focused
+$('.note').on('mousedown', () => {
+  if ($(':focus').hasClass('note-entry') || $(':focus').hasClass('note-entry-host') || $(':focus').hasClass('sketch-shape')) {
+    noFocus = false
+  } else {
+    noFocus = true
+  }
+})
+
 // Add note entry at point of click
 $('.note').on('click', function (e) {
-  if ($(e.target).hasClass('note')) {
-    if (clickOnce) {
-      const id = 'ne' + Date.now()
-      switch (mode) {
-        case 'circle': {
-          const ele = addCircle(id, e.offsetX, e.offsetY, 50, $('.sketch-color-input').val())
-          ele.appendTo(this)
-          $(ele).trigger('focus')
-          addResize(ele[0])
-          break
-        }
-        case 'rect': {
-          const ele = addRect(id, e.offsetX, e.offsetY, 50, 50, $('.sketch-color-input').val())
-          ele.appendTo(this)
-          $(ele).trigger('focus')
-          addResize(ele[0])
-          break
-        }
-        default: {
-          const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
-          noteEntryHost.addClass('note-entry-host').css('left', e.offsetX).css('top', e.offsetY).appendTo(this)
-          $('<div contenteditable="true"></div>').addClass('note-entry').appendTo(noteEntryHost).trigger('focus')
-        }
+  if ($(':focus').hasClass('note-entry') || $(':focus').hasClass('note-entry-host') || $(':focus').hasClass('sketch-shape')) {
+    noFocus = false
+  }
+  if ($(this).hasClass('note') && noFocus) {
+    const id = 'ne' + Date.now()
+    switch (mode) {
+      case 'circle': {
+        const ele = addCircle(id, e.offsetX, e.offsetY, 50, $('.sketch-color-input').val())
+        ele.appendTo(this)
+        $(ele).trigger('focus')
+        addResize(ele[0])
+        break
       }
-      dragElement($(`#${id}`)[0])
-      clickOnce = false
-    } else {
-      clickOnce = true
+      case 'rect': {
+        const ele = addRect(id, e.offsetX, e.offsetY, 50, 50, $('.sketch-color-input').val())
+        ele.appendTo(this)
+        $(ele).trigger('focus')
+        addResize(ele[0])
+        break
+      }
+      default: {
+        const noteEntryHost = $(`<div id=${id} tabindex="0"></div>`)
+        noteEntryHost.addClass('note-entry-host').css('left', e.offsetX).css('top', e.offsetY).appendTo(this)
+        $('<div contenteditable="true"></div>').addClass('note-entry').appendTo(noteEntryHost).trigger('focus')
+      }
     }
+    dragElement($(`#${id}`)[0])
   }
 })
 
@@ -573,14 +578,8 @@ $('#sketch-pencil').on('click', () => {
   toggleSketch(true)
 })
 
-// Set clickOnce so a note click will create the shape
-$('.sketch-tool').on('click', () => {
-  clickOnce = true
-})
-
 // Save when change is complete
 $('.sketch-color-input').on('change', function () {
-  clickOnce = false
   saveNotes()
 })
 
