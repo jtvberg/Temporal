@@ -122,6 +122,7 @@ main {
   outline: 1px solid #00000000;
 }
 
+.note-entry-host:focus,
 .note-entry-host:hover {
   border-color: #ffffff91;
   cursor: move;

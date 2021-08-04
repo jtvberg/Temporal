@@ -10,7 +10,6 @@ let settings = []
 let clickOnce = true
 let mode = ''
 let curShapeId = null
-let curNoteId = null
 
 // Load methods
 setFirstNote()
@@ -317,9 +316,6 @@ $(document).on('click, mousedown', function (e) {
   try {
     if ($(e.target).hasClass('note-entry-host')) {
       $(e.target).trigger('focus')
-      curNoteId = $(e.target).prop('id')
-    } else if (!$(e.target).hasClass('check-button')) {
-      curNoteId = null
     }
     if ($(e.target).hasClass('sketch-shape')) {
       $(e.target).trigger('focus')
@@ -604,11 +600,13 @@ $('.sketch-color-input').on('change', function () {
 })
 
 // Add check boxes to note entry
-$('.check-button').on('click', () => {
-  if ($(`#${curNoteId} > div`).find('.note-entry-check').length > 0) {
-    $(`#${curNoteId} > div`).find('.note-entry-check').remove()
+$('.check-button').on('mousedown', (e) => {
+  e.preventDefault()
+  let ele = $(':focus').hasClass('note-entry-host') ? $(':focus > div') : null
+  if ($(ele).find('.note-entry-check').length > 0) {
+    $(ele).find('.note-entry-check').remove()
   } else {
     let checkBox = '<span class="far note-entry-check note-entry-unchecked">&nbsp;</span>'
-    $(`#${curNoteId} > div`).prepend(checkBox).children('div').prepend(checkBox)
+    $(ele).prepend(checkBox).children('div').prepend(checkBox)
   }
 })
