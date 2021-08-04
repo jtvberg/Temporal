@@ -313,7 +313,7 @@ $(document).on('blur', '.note-entry-host, .sketch-shape', () => {
 
 // Focus on note entry host on click
 $(document).on('mousedown', function (e) {
-  if (!$(e.target).hasClass('note') && !$(e.target).hasClass('sketch')) { e.preventDefault() }
+  if (!$(e.target).hasClass('note') && !$(e.target).hasClass('sketch') && !$(e.target).hasClass('note-entry')) { e.preventDefault() }
   try {
     if ($(e.target).hasClass('note-entry-host') || $(e.target).hasClass('sketch-shape')) {
       $(e.target).trigger('focus')
