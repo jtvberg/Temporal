@@ -9,7 +9,6 @@ let scrollTimeout = null
 let settings = []
 let clickOnce = true
 let mode = ''
-let curShapeId = null
 
 // Load methods
 setFirstNote()
@@ -157,8 +156,8 @@ function sketchCanvas (canvasElement, strokeColor, id) {
     stroke = $(this).val()
     ctxSetup()
     $(this).parent().find('.sketch-color-button').css('color', stroke)
-    if (curShapeId) {
-      $(`#${curShapeId}`).css('border-color', stroke)
+    if ($(':focus').hasClass('sketch-shape')) {
+      $(':focus').css('border-color', stroke)
     }
   })
 }
@@ -285,6 +284,7 @@ function addResize (element) {
   let resizer = document.createElement('div')
   resizer.className = 'resizer'
 
+  $(element).empty()
   element.appendChild(resizer)
   resizer.addEventListener('mousedown', initResize, false)
 
@@ -312,16 +312,11 @@ $(document).on('blur', '.note-entry-host, .sketch-shape', () => {
 })
 
 // Focus on note entry host on click
-$(document).on('click, mousedown', function (e) {
+$(document).on('mousedown', function (e) {
+  if (!$(e.target).hasClass('note') && !$(e.target).hasClass('sketch')) { e.preventDefault() }
   try {
-    if ($(e.target).hasClass('note-entry-host')) {
+    if ($(e.target).hasClass('note-entry-host') || $(e.target).hasClass('sketch-shape')) {
       $(e.target).trigger('focus')
-    }
-    if ($(e.target).hasClass('sketch-shape')) {
-      $(e.target).trigger('focus')
-      curShapeId = $(e.target).prop('id')
-    } else if (!$(e.target).hasClass('sketch-color-button')) {
-      curShapeId = null
     }
     removeEmptyNoteEntries()
   } catch (err) {
@@ -329,8 +324,8 @@ $(document).on('click, mousedown', function (e) {
   }
 })
 
-// Reset note etry size on right-click
-$(document).on('contextmenu', '.note-entry-host', function () {
+// Reset note etry size on double-click
+$(document).on('dblclick', '.note-entry-host', function () {
   $(this).css({ 'font-size': '' })
 })
 
@@ -389,14 +384,6 @@ $(document).on('wheel', '.note-entry', (e) => {
 // Override paste to plain-text
 $(document).on('paste', '.note-entry', () => {
   clipboard.writeText(clipboard.readText())
-})
-
-// Reset font size on double-click
-$(document).on('dblclick', '.note-entry-host', function () {
-  $(this).find('.note-entry').children().each(function () {
-    $(this).removeAttr('style')
-  })
-  $(this).find('.note-entry').css({ 'font-size': '18px' })
 })
 
 // Stop double-click of entry from propagating
@@ -496,7 +483,7 @@ $('.header-bar').on('dblclick', () => {
 })
 
 // Header button double-click/right-click handler (stop prop)
-$('.ontop-button, .trans-button, .note-button, .sketch-button, .check-button').on('dblclick contextmenu', (e) => {
+$('.control-button-host, .note-button-host').on('dblclick contextmenu', (e) => {
   e.stopPropagation()
 })
 
@@ -520,7 +507,6 @@ $('.note').on('click', function (e) {
           const ele = addCircle(id, e.offsetX, e.offsetY, 50, $('.sketch-color-input').val())
           ele.appendTo(this)
           $(ele).trigger('focus')
-          curShapeId = id
           addResize(ele[0])
           break
         }
@@ -528,7 +514,6 @@ $('.note').on('click', function (e) {
           const ele = addRect(id, e.offsetX, e.offsetY, 50, 50, $('.sketch-color-input').val())
           ele.appendTo(this)
           $(ele).trigger('focus')
-          curShapeId = id
           addResize(ele[0])
           break
         }

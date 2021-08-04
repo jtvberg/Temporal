@@ -310,8 +310,17 @@ main {
   min-height: 15px;
 }
 
+.sketch-shape:focus,
 .sketch-shape:hover {
   cursor: move;
+  outline-offset: 3px;
+  outline-width: 1px;
+  outline-color: white;
+  outline-style: dotted;
+}
+
+.sketch-shape:hover .resizer {
+  opacity: 1;
 }
 
 input[type=color] {
@@ -328,15 +337,11 @@ input[type=color] {
   height: 0;
   border-bottom: 15px solid #e0e0e0;
   border-left: 15px solid transparent;
-  right: 0;
-  bottom: 0;
+  right: -6px;
+  bottom: -6px;
   cursor: se-resize;
   opacity: 0;
   transition: opacity .3s;
-}
-
-.resizer:hover {
-  opacity: 1;
 }
 
 .note-entry-check {
