@@ -311,10 +311,13 @@ $(document).on('blur', '.note-entry-host, .sketch-shape', () => {
 })
 
 // Focus on note entry host on click
-$(document).on('mousedown', function (e) {
+$(document).on('mousedown', (e) => {
   try {
     if ($(e.target).hasClass('note-entry-host') || $(e.target).hasClass('sketch-shape')) {
       $(e.target).trigger('focus')
+    }
+    else if ($(e.target).hasClass('sketch-color-button')) {
+      e.preventDefault()
     }
     removeEmptyNoteEntries()
   } catch (err) {
@@ -325,12 +328,6 @@ $(document).on('mousedown', function (e) {
 // Reset note etry size on double-click
 $(document).on('dblclick', '.note-entry-host', function () {
   $(this).css({ 'font-size': '' })
-})
-
-// Focus on note entry on click
-$(document).on('click', '.note-entry', function (e) {
-  e.stopPropagation()
-  $(this).trigger('focus')
 })
 
 // Delete note-entry handler
