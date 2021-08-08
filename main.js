@@ -30,7 +30,7 @@ const createWindow = () => {
   })
 
   // HTML file to load into window
-  // win.loadFile('main.html')
+  win.loadFile('main.html')
 
   // Show window when ready
   win.once('ready-to-show', () => {
@@ -38,7 +38,7 @@ const createWindow = () => {
   })
 
   // Open DevTools (dev only)
-  win.webContents.openDevTools('detach')
+  // win.webContents.openDevTools('detach')
 
   // Set vibrancy to match theme on update
   nativeTheme.themeSource = 'system'
