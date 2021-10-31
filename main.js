@@ -2,11 +2,9 @@
 const { app, BrowserWindow, ipcMain, Tray, nativeTheme } = require('electron')
 const path = require('path')
 const updater = require('./updater')
+const isDev = !app.isPackaged
 let allowQuit = false
 let vibrancyOn = true
-
-// Enable Electron-Reload (dev only)
-// require('electron-reload')(__dirname)
 
 // Main window
 let win = null
@@ -38,7 +36,7 @@ const createWindow = () => {
   })
 
   // Open DevTools (dev only)
-  // win.webContents.openDevTools('detach')
+  // isDev && win.webContents.openDevTools('detach')
 
   // Set vibrancy to match theme on update
   nativeTheme.themeSource = 'system'
@@ -75,13 +73,20 @@ function vibrancySet() {
 // Remove app from dock
 app.dock.hide()
 
+// Load electron-reload in dev
+if (isDev) {
+  require('electron-reload')(__dirname, {
+    electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+  })
+}
+
 // Instantiate window and tray on app ready
 app.whenReady().then(() => {
   try {
     createWindow()
     createTray()
     // Check for updates after 3 seconds
-    setTimeout(updater, 3000)
+    !isDev && setTimeout(updater, 3000)
   } catch (err) { console.error(err) }
 })
 
