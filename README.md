@@ -4,14 +4,17 @@
  - Tray resident only
  - Saves to local storage (no import/export)
  - Can be locked to stay on top of other windows
- - Toggle into sketch mode to free draw
+ - Toggle into sketch mode to free draw or create shapes (with color picker)
  - Toggle transparency vs. vibrancy modes (glass look)
  - Note scrolling with hidden content indicators
  - Ctrl+click on note button to delete all entries (with confirmation)
  - Double-click the header to maximize and go into full screen/transparent mode to annotate docs. (Primary use-case is for telecommunication where you may want to mark-up a shared document for discussion.)
 
-#### Main Screen with Notes and Sketches:
+#### Main Screen:
 <img src="/screenshots/temporal_main.png" width="250"/>
+
+#### Draw Mode Menu:
+<img src="/screenshots/temporal_draw.png" width="250"/>
 
 ## Using the code
     Clone repo
