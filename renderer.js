@@ -583,11 +583,13 @@ $('.sketch-color-input').on('change', function () {
 // Add check boxes to note entry
 $('.check-button').on('mousedown', (e) => {
   e.preventDefault()
-  let ele = $(':focus').hasClass('note-entry-host') ? $(':focus > div') : null
-  if ($(ele).find('.note-entry-check').length > 0) {
-    $(ele).find('.note-entry-check').remove()
-  } else {
-    let checkBox = '<span class="far note-entry-check note-entry-unchecked">&nbsp;</span>'
-    $(ele).prepend(checkBox).children('div').prepend(checkBox)
+  let checkBox = '<span class="far note-entry-check note-entry-unchecked">&nbsp;</span>'
+  let ele = $(':focus').hasClass('note-entry-host') ? $(':focus > div') : $(getSelection().getRangeAt(0).commonAncestorContainer.parentElement)
+  if ($(ele).closest('.note-entry-host').length > 0) {
+    if ($(ele).find('.note-entry-check').length > 0) {
+      $(ele).find('.note-entry-check').remove()
+    } else {
+      $(ele).prepend(checkBox).children('div').prepend(checkBox)
+    }
   }
 })
