@@ -303,6 +303,18 @@ function addResize (element) {
   }
 }
 
+// Add or remove a check box to an element
+function toggleCheckListItem(ele) {
+  if ($(ele).closest('.note-entry-host').length > 0) {
+    if ($(ele).find('.note-entry-check').length > 0) {
+      $(ele).find('.note-entry-check').remove()
+    } else {
+      const checkBox = '<span class="far note-entry-check note-entry-unchecked">&nbsp;</span>'
+      $(ele).prepend(checkBox).children('div').prepend(checkBox)
+    }
+  }
+}
+
 // Save note content to local storage
 $(document).on('blur', '.note-entry-host, .sketch-shape', () => {
   if (change) {
@@ -493,7 +505,10 @@ $('.sketch').each(function () {
 })
 
 // Track if a note element is focused
-$('.note').on('mousedown', () => {
+$('.note').on('mousedown', (e) => {
+  if ($(e.target).hasClass('note') || $(e.target).hasClass('note-entry-host')) {
+    getSelection().removeAllRanges()
+  }
   if ($(':focus').hasClass('note-entry') || $(':focus').hasClass('note-entry-host') || $(':focus').hasClass('sketch-shape')) {
     noFocus = false
   } else {
@@ -583,13 +598,13 @@ $('.sketch-color-input').on('change', function () {
 // Add check boxes to note entry
 $('.check-button').on('mousedown', (e) => {
   e.preventDefault()
-  let checkBox = '<span class="far note-entry-check note-entry-unchecked">&nbsp;</span>'
-  let ele = $(':focus').hasClass('note-entry-host') ? $(':focus > div') : $(getSelection().getRangeAt(0).commonAncestorContainer.parentElement)
-  if ($(ele).closest('.note-entry-host').length > 0) {
-    if ($(ele).find('.note-entry-check').length > 0) {
-      $(ele).find('.note-entry-check').remove()
-    } else {
-      $(ele).prepend(checkBox).children('div').prepend(checkBox)
+  let eles = getSelection().rangeCount > 0 ? $(getSelection().getRangeAt(0)) : []
+  if (eles[0]) getCheckListElement(eles[0].startContainer.parentNode)
+  // Get element to add check box too
+  function getCheckListElement(node) {
+    toggleCheckListItem(node)
+    if (node.nextSibling && node.nextSibling !== eles[0].endContainer.parentNode.nextSibling) {
+      getCheckListElement(node.nextSibling)
     }
   }
 })
