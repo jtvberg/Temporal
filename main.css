@@ -79,8 +79,8 @@ main {
   overflow: auto;
   width: 100vw;
   height: 100vh;
-  margin-top: -21px;
-  padding-top: 21px;
+  /* margin-top: -21px;
+  padding-top: 21px; */
 }
 
 .note-entry:hover {
