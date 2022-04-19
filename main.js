@@ -1,5 +1,5 @@
 // Imports and variable declarations
-const { app, BrowserWindow, ipcMain, Tray, nativeTheme } = require('electron')
+const { app, BrowserWindow, ipcMain, Tray, nativeTheme, globalShortcut } = require('electron')
 const path = require('path')
 const updater = require('./updater')
 const isDev = !app.isPackaged
@@ -85,6 +85,9 @@ app.whenReady().then(() => {
   try {
     createWindow()
     createTray()
+    globalShortcut.register('CommandOrControl+Q', () => {
+      console.log('CommandOrControl+Q was pressed')
+    })
     // Check for updates after 3 seconds
     !isDev && setTimeout(updater, 3000)
   } catch (err) { console.error(err) }
@@ -107,6 +110,7 @@ app.on('before-quit', (e) => {
     allowQuit = true
     app.quit()
   }
+  globalShortcut.unregister('CommandOrControl+Q')
 })
 
 // CLose app if all windows are closed (not Mac)
