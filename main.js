@@ -22,8 +22,7 @@ const createWindow = () => {
     visualEffectState: 'active',
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
-      worldSafeExecuteJavaScript: true
+      contextIsolation: false
     }
   })
 
