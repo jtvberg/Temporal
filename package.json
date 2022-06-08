@@ -1,6 +1,6 @@
 {
   "name": "Temporal",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Transient Note Taking",
   "main": "main.js",
   "scripts": {
@@ -19,11 +19,11 @@
   "author": "jtvberg",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^12.2.3",
+    "electron": "^19.0.3",
     "electron-builder": "^23.0.3",
     "electron-notarize": "^1.2.1",
     "electron-reload": "^1.5.0",
-    "eslint": "^8.15.0"
+    "eslint": "^8.17.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
