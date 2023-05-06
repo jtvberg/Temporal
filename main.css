@@ -57,6 +57,7 @@ main {
   display: flex;
   padding-top: 1px;
   justify-content: center;
+  -webkit-app-region: no-drag;
 }
 
 .note-button {
