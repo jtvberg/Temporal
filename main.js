@@ -34,6 +34,8 @@ const createWindow = () => {
     win.show()
   })
 
+  win.webContents.session.setSpellCheckerEnabled(false)
+
   // Open DevTools (dev only)
   // isDev && win.webContents.openDevTools('detach')
 
