@@ -19,7 +19,7 @@
   "author": "jtvberg",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^24.8.7",
+    "electron": "^22.0.3",
     "electron-builder": "^24.6.4",
     "@electron/notarize": "^2.1.0",
     "electron-reload": "^1.5.0",

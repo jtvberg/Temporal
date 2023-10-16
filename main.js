@@ -37,7 +37,7 @@ const createWindow = () => {
   win.webContents.session.setSpellCheckerEnabled(false)
 
   // Open DevTools (dev only)
-  // isDev && win.webContents.openDevTools('detach')
+  isDev && win.webContents.openDevTools('detach')
 
   // Set vibrancy to match theme on update
   nativeTheme.themeSource = 'system'
