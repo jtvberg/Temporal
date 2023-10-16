@@ -1,13 +1,13 @@
 {
   "name": "Temporal",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Transient Note Taking",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "debug": "electron --inspect=7070 .",
     "break": "electron --inspect-brk=7070 .",
-    "buildMac": "electron-builder -m",
+    "buildMac": "electron-builder -m --x64 --arm64",
     "releaseMac": "electron-builder -m -p 'onTagOrDraft'"
   },
   "repository": "https://github.com/jtvberg/Temporal",
