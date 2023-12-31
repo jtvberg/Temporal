@@ -11,6 +11,7 @@ exports.default = function (context) {
     appBundleId: 'com.jtvberg.temporal',
     appPath: `${appDir}/${appName}.app`,
     appleId: process.env.appleId,
-    appleIdPassword: process.env.appleIdPassword
+    appleIdPassword: process.env.appleIdPassword,
+    teamId: process.env.teamId
   })
 }
