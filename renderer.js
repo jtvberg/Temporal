@@ -70,7 +70,7 @@ function changeWatch (note) {
   })
 }
 
-// Window max/restore on header double click
+// Window max/restore
 function maxRestoreWindow () {
   ipcRenderer.send('win-max')
   if ($('.header-bar').hasClass('header-bar-max')) {
@@ -446,10 +446,15 @@ $('.note-button').on('click', (e) => {
   $('.note-host').scrollTop(0).scrollLeft(0)
 })
 
-// Toggle between transparency and vibrancy
+// Toggle between transparency
 $('.trans-button').on('click', () => {
   curTrans = $('.trans-button').hasClass('trans-off')
   setTransWindow(curTrans)
+})
+
+// Toggle between transparency and vibrancy
+$('.overlay-button').on('click', () => {
+  maxRestoreWindow()
 })
 
 // Toggle keep on top

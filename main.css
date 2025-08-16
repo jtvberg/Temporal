@@ -1,5 +1,5 @@
 body {
-  background-color: #1616169a;
+  background-color: #161616c7;
   overflow: hidden;
   margin: 0px;
 }
@@ -42,13 +42,13 @@ main {
 .right-control-host {
   grid-column: 3;
   justify-self: flex-end;
-  margin-right: 6px;
+  margin-right: 4px;
 }
 
 .left-control-host {
   grid-column: 1;
   justify-self: flex-start;
-  margin-left: 6px;
+  margin-left: 4px;
 }
 
 .note-button-host {
@@ -129,6 +129,7 @@ main {
   cursor: move;
 }
 
+.overlay-button,
 .check-button,
 .sketch-tool,
 .trans-button,
@@ -137,16 +138,7 @@ main {
   color: #bebebe2d;
 }
 
-.trans-button,
-.ontop-button {
-  margin-left: 4px;
-}
-
-.check-button,
-.sketch-button {
-  margin-right: 4px;
-}
-
+.overlay-button:hover,
 .check-button:hover,
 .sketch-tool:hover, 
 .trans-button:hover,
@@ -170,6 +162,14 @@ main {
 
 .trans-off:before {
   content: '\f0c8';
+}
+
+.overlay-on:before {
+  content: '\f78c';
+}
+
+.overlay-off:before {
+  content: '\f31e';
 }
 
 .sketch-mode {
@@ -247,26 +247,26 @@ main {
 
 .scroll-arrow-left {
   position: absolute;
-  left: 5px;
-  top: calc(50% - 10px);
+  left: -5px;
+  top: calc(50% - 20px);
 }
 
 .scroll-arrow-right {
   position: absolute;
-  right: 5px;
-  top: calc(50% - 10px);
+  right: -5px;
+  top: calc(50% - 20px);
 }
 
 .scroll-arrow-up {
   position: absolute;
-  left: calc(50% - 10px);
-  top: 15px;
+  left: calc(50% - 20px);
+  top: 20px;
 }
 
 .scroll-arrow-down {
   position: absolute;
-  left: calc(50% - 10px);
-  bottom: 20px;
+  left: calc(50% - 20px);
+  bottom: 25px;
 }
 
 .sketch-tool-panel {

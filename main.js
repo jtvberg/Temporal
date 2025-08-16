@@ -13,7 +13,7 @@ const createWindow = () => {
   win = new BrowserWindow({
     width: 300,
     height: 400,
-    minWidth: 180,
+    minWidth: 260,
     minHeight: 150,
     transparent: true,
     frame: false,
@@ -25,6 +25,8 @@ const createWindow = () => {
       contextIsolation: false
     }
   })
+
+  win.setVibrancy('sidebar')
 
   // HTML file to load into window
   win.loadFile('main.html')
@@ -38,12 +40,6 @@ const createWindow = () => {
 
   // Open DevTools (dev only)
   isDev && win.webContents.openDevTools('detach')
-
-  // Set vibrancy to match theme on update
-  nativeTheme.themeSource = 'system'
-  nativeTheme.on('updated', () => {
-    vibrancySet()
-  })
 }
 
 // Tray icon
@@ -61,12 +57,9 @@ const createTray = () => {
 
 // Set vibrancy
 function vibrancySet() {
-  if (nativeTheme.shouldUseDarkColors) {
-    win.setVibrancy('dark')
+  if (vibrancyOn) {
+    win.setVibrancy('sidebar')
   } else {
-    win.setVibrancy('light')
-  }
-  if (!vibrancyOn) {
     win.setVibrancy(null)
   }
 }
